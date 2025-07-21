@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -16,14 +18,38 @@
         android:theme="@style/Theme.SoundOnline"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.library.YourUploadActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.UserPlaylistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.UserAlbumsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.UserAlbumDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.RecentlyPlayedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.ListeningHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.LikedTrackActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.LibraryActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.auth.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true" />
