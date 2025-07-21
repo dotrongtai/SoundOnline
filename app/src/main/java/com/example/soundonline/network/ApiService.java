@@ -57,97 +57,97 @@ public interface ApiService {
     // Auth Endpoints
 
 
-    @GET("api/Auth/google")
+    @GET("Auth/google")
     Call<GoogleAuthResponse> googleAuth();
 
     // Admin Endpoints
-    @GET("api/admin/users")
+    @GET("admin/users")
     Call<UsersResponse> getUsers();
 
-    @PUT("api/admin/users/{id}/status")
+    @PUT("admin/users/{id}/status")
     Call<UserStatusResponse> updateUserStatus(@Path("id") int id, @Body UpdateUserStatusRequest request);
 
-    @PUT("api/admin/sounds/{id}/moderation")
+    @PUT("admin/sounds/{id}/moderation")
     Call<ModerateSoundResponse> moderateSound(@Path("id") int id, @Body ModerateSoundRequest request);
 
     // Album Endpoints
-    @POST("api/Albums")
+    @POST("Albums")
     Call<CreateAlbumResponse> createAlbum(@Body CreateAlbumRequest request);
 
-    @GET("api/Albums")
+    @GET("Albums")
     Call<AlbumsResponse> getAlbums();
 
-    @GET("api/Albums/{albumId}")
+    @GET("Albums/{albumId}")
     Call<AlbumResponse> getAlbum(@Path("albumId") int albumId);
 
-    @PUT("api/Albums/{albumId}")
+    @PUT("Albums/{albumId}")
     Call<UpdateAlbumResponse> updateAlbum(@Path("albumId") int albumId, @Body UpdateAlbumRequest request);
 
-    @DELETE("api/Albums/{albumId}")
+    @DELETE("Albums/{albumId}")
     Call<Void> deleteAlbum(@Path("albumId") int albumId);
 
     // Category Endpoints
-    @GET("api/categories")
+    @GET("categories")
     Call<CategoriesResponse> getCategories();
 
 
-    @GET("api/categories/{id}/sounds")
+    @GET("categories/{id}/sounds")
     Call<CategorySoundsResponse> getCategorySounds(@Path("id") int id);
 
     // Comment Endpoints
-    @POST("api/Comments")
+    @POST("Comments")
     Call<CreateCommentResponse> createComment(@Body CreateCommentRequest request);
 
-    @GET("api/Comments/sound/{soundId}")
+    @GET("Comments/sound/{soundId}")
     Call<SoundCommentsResponse> getSoundComments(@Path("soundId") int soundId);
 
-    @PUT("api/Comments/{commentId}")
+    @PUT("Comments/{commentId}")
     Call<UpdateCommentResponse> updateComment(@Path("commentId") int commentId, @Body UpdateCommentRequest request);
 
-    @DELETE("api/Comments/{commentId}")
+    @DELETE("Comments/{commentId}")
     Call<Void> deleteComment(@Path("commentId") int commentId);
 
     // Follow Endpoints
-    @POST("api/follows")
+    @POST("follows")
     Call<FollowResponse> follow(@Body FollowRequest request);
 
     // History Endpoints
-    @POST("api/history")
+    @POST("history")
     Call<AddHistoryResponse> addHistory(@Body AddHistoryRequest request);
 
     // Home Endpoint
-    @GET("api/home")
+    @GET("home")
     Call<HomeResponse> getHome();
 
     // Library Endpoint
-    @GET("api/library/my-tracks")
+    @GET("library/my-tracks")
     Call<MyTracksResponse> getMyTracks();
 
     // Like Endpoint
-    @POST("api/likes")
+    @POST("likes")
     Call<LikeResponse> like(@Body LikeRequest request);
 
     // Playlist Endpoints
-    @POST("api/Playlists")
+    @POST("Playlists")
     Call<CreatePlaylistResponse> createPlaylist(@Body CreatePlaylistRequest request);
 
-    @POST("api/Playlists/{playlistId}/tracks")
+    @POST("Playlists/{playlistId}/tracks")
     Call<AddTrackResponse> addTrackToPlaylist(@Path("playlistId") String playlistId, @Body AddTrackToPlaylistRequest request);
 
-    @DELETE("api/Playlists/{playlistId}/tracks")
+    @DELETE("Playlists/{playlistId}/tracks")
     Call<Void> removeTrackFromPlaylist(@Path("playlistId") String playlistId, @Body RemoveTrackFromPlaylistRequest request);
 
-    @DELETE("api/Playlists/{playlistId}")
+    @DELETE("Playlists/{playlistId}")
     Call<Void> deletePlaylist(@Path("playlistId") int playlistId);
 
 
     // Search Endpoint
-    @GET("api/search")
+    @GET("search")
     Call<SearchResponse> search(@Query("query") String query, @Query("type") String type);
 
     // Sound Endpoints
 //    @Multipart
-//    @POST("api/Sounds")
+//    @POST("Sounds")
 //    Call<UploadSoundResponse> uploadSound(
 //            @Part("Title") String title,
 //            @Part("ArtistName") String artistName,
@@ -161,20 +161,20 @@ public interface ApiService {
 //            @Part("IsPublic") boolean isPublic
 //    );
 
-    @GET("api/sounds/{id}")
+    @GET("sounds/{id}")
     Call<SoundResponse> getSound(@Path("id") int id);
 
-    @POST("api/sounds/{id}/play")
+    @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
 
     // User Endpoints
-    @GET("api/users/{id}/followers")
+    @GET("users/{id}/followers")
     Call<FollowersResponse> getFollowers(@Path("id") int id);
 
-    @GET("api/users/{id}/following")
+    @GET("users/{id}/following")
     Call<FollowingResponse> getFollowing(@Path("id") int id);
 
-    @GET("api/users/{id}/history")
+    @GET("users/{id}/history")
     Call<UserHistoryResponse> getUserHistory(@Path("id") int id);
 
 
