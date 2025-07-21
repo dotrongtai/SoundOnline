@@ -12,13 +12,16 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.soundonline.Adapter.AlbumAdapter;
 import com.example.soundonline.Adapter.LikeAdapter;
 import com.example.soundonline.Adapter.PlaylistAdapter;
 import com.example.soundonline.Adapter.TrendingCategoryAdapter;
 import com.example.soundonline.R;
+import com.example.soundonline.model.Album;
 import com.example.soundonline.model.Category;
 import com.example.soundonline.model.Liked;
 import com.example.soundonline.model.Playlist;
+import com.example.soundonline.network.Album.AlbumsResponse;
 import com.example.soundonline.network.ApiService;
 import com.example.soundonline.presentation.auth.Login;
 
@@ -37,10 +40,11 @@ public class MainActivity extends ComponentActivity {
     @Inject
     ApiService apiService;
 
-    private RecyclerView rvTrending, rvPlaylist,rvFavorite;
+    private RecyclerView rvTrending, rvPlaylist,rvFavorite, rvAlbum;
     private PlaylistAdapter playlistAdapter;
     private LikeAdapter likeAdapter;
     private TrendingCategoryAdapter trendingCategoryAdapter;
+    private AlbumAdapter albumAdapter;
     private int userId;
 
     @Override
@@ -52,10 +56,12 @@ public class MainActivity extends ComponentActivity {
         rvTrending = findViewById(R.id.rvTrending);
         rvPlaylist = findViewById(R.id.rvPlaylist);
         rvFavorite = findViewById(R.id.rvFavorite);
+        rvAlbum = findViewById(R.id.rvAlbum);
         // Cài đặt layout manager
-        rvTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        rvFavorite.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvFavorite.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)); // Hiển thị like dọc
+        rvAlbum.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
 
         // Lấy userId từ SharedPreferences
@@ -71,6 +77,8 @@ public class MainActivity extends ComponentActivity {
         fetchUserPlaylists(userId);
         fetchTrendingCategories();
         fetchLikedItems(userId);
+        fetchAlbums();
+        ;
     }
 
     private int getUserIdFromPreferences() {
@@ -117,6 +125,27 @@ public class MainActivity extends ComponentActivity {
             @Override
             public void onFailure(Call<List<Liked>> call, Throwable t) {
                 Log.e("MainActivity", "Lỗi likedItems", t);
+            }
+        });
+    }
+    private void fetchAlbums() {
+        apiService.getAlbums().enqueue(new Callback<List<Album>>() {
+            @Override
+            public void onResponse(Call<List<Album>> call, Response<List<Album>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Album> albums = response.body();
+                    Log.d("MainActivity", "Số album: " + albums.size());
+                    albumAdapter = new AlbumAdapter(MainActivity.this, albums);
+                    rvAlbum.setAdapter(albumAdapter);
+
+                } else {
+                    Log.e("MainActivity", "Lỗi album: " + response.code() + ", Message: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Album>> call, Throwable t) {
+                Log.e("MainActivity", "Lỗi kết nối API album: " + t.getMessage(), t);
             }
         });
     }

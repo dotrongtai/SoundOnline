@@ -37,7 +37,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
     @Override
     public void onBindViewHolder(@NonNull LikeViewHolder holder, int position) {
         Liked liked = likedSongs.get(position);
-        Sound song = liked.getSound(); // 🔁 lấy ra bài hát
+        Sound song = liked.getSound();
 
         holder.txtSongTitle.setText(song.getTitle());
 
