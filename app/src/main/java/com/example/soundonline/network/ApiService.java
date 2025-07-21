@@ -54,6 +54,9 @@ public interface ApiService {
     @GET("categories/trending")
     Call<List<Category>> getTrendingCategories();
 
+
+    //Sound Endpoints
+
     // Auth Endpoints
 
 

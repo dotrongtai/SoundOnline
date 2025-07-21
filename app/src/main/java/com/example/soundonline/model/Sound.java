@@ -19,6 +19,8 @@ public class Sound implements Serializable {
     private Integer uploadedBy;
     private String createdAt;
 
+    private String uploaderName;
+
     // Getters and Setters
 
     public int getSoundId() {
@@ -43,6 +45,13 @@ public class Sound implements Serializable {
 
     public void setArtistName(String artistName) {
         this.artistName = artistName;
+    }
+    public String getUploaderName() {
+        return uploaderName;
+    }
+
+    public void setUploaderName(String uploaderName) {
+        this.uploaderName = uploaderName;
     }
 
     public Integer getAlbumId() {

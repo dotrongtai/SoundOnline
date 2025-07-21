@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">SoundOnline</string>
+    <string name="play_button">Play</string>
+    <string name="more_button">More Options</string>
+    <string name="like_button">Like</string>
+    <string name="comment_button">Comment</string>
+    <string name="dropdown_button">Dropdown</string>
+    <string name="sound_background_image">Sound background image</string>
 </resources>
