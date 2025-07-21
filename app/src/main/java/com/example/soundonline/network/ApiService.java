@@ -139,11 +139,11 @@ public interface ApiService {
     @DELETE("Playlists/{playlistId}/tracks")
     Call<Void> removeTrackFromPlaylist(@Path("playlistId") String playlistId, @Body RemoveTrackFromPlaylistRequest request);
 
-    @GET("playlists/user/{userId}")
-    Call<List<Playlist>> getUserPlaylists(@Path("userId") int userId);
-
     @DELETE("Playlists/{playlistId}")
     Call<Void> deletePlaylist(@Path("playlistId") int playlistId);
+
+    @GET("playlists/user/{userId}")
+    Call<List<Playlist>> getUserPlaylists(@Path("userId") int userId);
 
     // Search
     @GET("search")
@@ -156,7 +156,7 @@ public interface ApiService {
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
 
-    // Note: You can uncomment and implement multipart upload when needed
+    // Uncomment to implement upload if needed in the future
     // @Multipart
     // @POST("sounds")
     // Call<UploadSoundResponse> uploadSound(...);
