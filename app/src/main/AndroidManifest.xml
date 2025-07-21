@@ -46,6 +46,10 @@
             android:name=".presentation.auth.Login"
             android:exported="false" />
         <activity
+            android:name=".presentation.auth.Register"
+            android:exported="false" />
+
+        <activity
             android:name=".presentation.player.PlayerActivity"
             android:exported="false" />
         <activity
