@@ -184,20 +184,32 @@ public class MainActivity extends ComponentActivity {
             public void onResponse(Call<List<Playlist>> call, Response<List<Playlist>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Playlist> playlists = response.body();
-                    Log.d("MainActivity", "Số playlist: " + playlists.size());
-                    playlistAdapter = new PlaylistAdapter(MainActivity.this, playlists);
-                    rvPlaylist.setAdapter(playlistAdapter);
+                    if (playlists.size() > 0) {
+                        playlistAdapter = new PlaylistAdapter(MainActivity.this, playlists);
+                        rvPlaylist.setAdapter(playlistAdapter);
+                        rvPlaylist.setVisibility(View.VISIBLE);
+                        tvPlaylistTitle.setVisibility(View.VISIBLE);
+                    } else {
+                        // Ẩn nếu không có dữ liệu
+                        rvPlaylist.setVisibility(View.GONE);
+                        tvPlaylistTitle.setVisibility(View.GONE);
+                    }
                 } else {
                     Log.e("MainActivity", "Lỗi playlist: " + response.code());
+                    rvPlaylist.setVisibility(View.GONE);
+                    tvPlaylistTitle.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Playlist>> call, Throwable t) {
                 Log.e("MainActivity", "Lỗi kết nối playlist", t);
+                rvPlaylist.setVisibility(View.GONE);
+                tvPlaylistTitle.setVisibility(View.GONE);
             }
         });
     }
+
 
     private void fetchLikedItems(int userId) {
         apiService.getUserLikedTracks(userId).enqueue(new Callback<List<Liked>>() {
@@ -205,17 +217,27 @@ public class MainActivity extends ComponentActivity {
             public void onResponse(Call<List<Liked>> call, Response<List<Liked>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Liked> likedItems = response.body();
-                    Log.d("MainActivity", "Số like: " + likedItems.size());
-                    likeAdapter = new LikeAdapter(MainActivity.this, likedItems);
-                    rvFavorite.setAdapter(likeAdapter);
+                    if (likedItems.size() > 0) {
+                        likeAdapter = new LikeAdapter(MainActivity.this, likedItems);
+                        rvFavorite.setAdapter(likeAdapter);
+                        rvFavorite.setVisibility(View.VISIBLE);
+                        tvLikedTitle.setVisibility(View.VISIBLE);
+                    } else {
+                        rvFavorite.setVisibility(View.GONE);
+                        tvLikedTitle.setVisibility(View.GONE);
+                    }
                 } else {
                     Log.e("MainActivity", "Lỗi likedItems: " + response.code());
+                    rvFavorite.setVisibility(View.GONE);
+                    tvLikedTitle.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Liked>> call, Throwable t) {
                 Log.e("MainActivity", "Lỗi likedItems", t);
+                rvFavorite.setVisibility(View.GONE);
+                tvLikedTitle.setVisibility(View.GONE);
             }
         });
     }
