@@ -75,7 +75,7 @@ public interface ApiService {
     Call<CreateAlbumResponse> createAlbum(@Body CreateAlbumRequest request);
 
     @GET("Albums")
-    Call<List<Album>> getAlbums();
+    Call<AlbumsResponse> getAlbums();
 
     @GET("Albums/{albumId}")
     Call<AlbumResponse> getAlbum(@Path("albumId") int albumId);
