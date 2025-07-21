@@ -1,6 +1,5 @@
 package com.example.soundonline.model;
 
-import java.util.Date;
 import java.util.List;
 
 public class Album {
@@ -8,11 +7,11 @@ public class Album {
     private String albumTitle;
     private String artistName;
     private String coverImageUrl;
-    private Date releaseDate;
+    private String releaseDate;
     private String genre;
     private Integer totalTracks;
     private Integer duration; // in seconds (or minutes depending on API)
-    private Date createdAt;
+    private String createdAt;
 
     private List<Sound> sounds; // assuming you have a Sound model
 
@@ -21,8 +20,8 @@ public class Album {
     }
 
     public Album(int albumId, String albumTitle, String artistName, String coverImageUrl,
-                 Date releaseDate, String genre, Integer totalTracks, Integer duration,
-                 Date createdAt, List<Sound> sounds) {
+                 String releaseDate, String genre, Integer totalTracks, Integer duration,
+                 String createdAt, List<Sound> sounds) {
         this.albumId = albumId;
         this.albumTitle = albumTitle;
         this.artistName = artistName;
@@ -68,11 +67,11 @@ public class Album {
         this.coverImageUrl = coverImageUrl;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -100,11 +99,11 @@ public class Album {
         this.duration = duration;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
