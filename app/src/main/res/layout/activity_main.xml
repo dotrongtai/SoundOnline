@@ -78,6 +78,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTrending" />
+    <!-- 6. Albums Title -->
+    <TextView
+        android:id="@+id/tvAlbum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Album nổi bật"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/rvTrending"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- 6.1 RecyclerView Albums -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAlbum"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvAlbum"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav" />
 
     <!-- 5. Bottom Navigation -->
     <LinearLayout
@@ -91,23 +114,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="124dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_home" />
+        <Button
+            android:id="@+id/btnHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Home"
+            android:drawableTop="@drawable/ic_home"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:gravity="center" />
 
-        <ImageView
-            android:layout_width="82dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_search" />
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Search"
+            android:drawableTop="@drawable/ic_search"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:gravity="center" />
 
-        <ImageView
-            android:layout_width="117dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_library" />
+        <Button
+            android:id="@+id/btnLibrary"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Library"
+            android:drawableTop="@drawable/ic_library"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Category"
+            android:drawableTop="@drawable/ic_category"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnPlaylist"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Playlist"
+            android:drawableTop="@drawable/ic_playlist"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:gravity="center" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
