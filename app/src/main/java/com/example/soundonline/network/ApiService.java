@@ -31,17 +31,17 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    // Auth
+    // Auth Endpoints
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
     @POST("auth/register")
     Call<LoginResponse> register(@Body RegisterRequest registerRequest);
 
-    @GET("Auth/google")
+    @GET("auth/google")
     Call<GoogleAuthResponse> googleAuth();
 
-    // User
+    // User Endpoints
     @GET("users/{id}")
     Call<User> getUserProfile(@Path("id") int id);
 
@@ -60,7 +60,7 @@ public interface ApiService {
     @GET("users/{id}/history")
     Call<UserHistoryResponse> getUserHistory(@Path("id") int id);
 
-    // Admin
+    // Admin Endpoints
     @GET("admin/users")
     Call<UsersResponse> getUsers();
 
@@ -70,12 +70,12 @@ public interface ApiService {
     @PUT("admin/sounds/{id}/moderation")
     Call<ModerateSoundResponse> moderateSound(@Path("id") int id, @Body ModerateSoundRequest request);
 
-    // Album
+    // Album Endpoints
     @POST("Albums")
     Call<CreateAlbumResponse> createAlbum(@Body CreateAlbumRequest request);
 
     @GET("Albums")
-    Call<List<Album>> getAlbums();
+    Call<AlbumsResponse> getAlbums();
 
     @GET("Albums/{albumId}")
     Call<AlbumResponse> getAlbum(@Path("albumId") int albumId);
@@ -86,7 +86,7 @@ public interface ApiService {
     @DELETE("Albums/{albumId}")
     Call<Void> deleteAlbum(@Path("albumId") int albumId);
 
-    // Category
+    // Category Endpoints
     @GET("categories")
     Call<CategoriesResponse> getCategories();
 
@@ -96,7 +96,7 @@ public interface ApiService {
     @GET("categories/{id}/sounds")
     Call<CategorySoundsResponse> getCategorySounds(@Path("id") int id);
 
-    // Comment
+    // Comment Endpoints
     @POST("Comments")
     Call<CreateCommentResponse> createComment(@Body CreateCommentRequest request);
 
@@ -109,27 +109,27 @@ public interface ApiService {
     @DELETE("Comments/{commentId}")
     Call<Void> deleteComment(@Path("commentId") int commentId);
 
-    // Follow
+    // Follow Endpoints
     @POST("follows")
     Call<FollowResponse> follow(@Body FollowRequest request);
 
-    // History
+    // History Endpoints
     @POST("history")
     Call<AddHistoryResponse> addHistory(@Body AddHistoryRequest request);
 
-    // Home
+    // Home Endpoint
     @GET("home")
     Call<HomeResponse> getHome();
 
-    // Library
+    // Library Endpoint
     @GET("library/my-tracks")
     Call<MyTracksResponse> getMyTracks();
 
-    // Like
+    // Like Endpoint
     @POST("likes")
     Call<LikeResponse> like(@Body LikeRequest request);
 
-    // Playlist
+    // Playlist Endpoints
     @POST("Playlists")
     Call<CreatePlaylistResponse> createPlaylist(@Body CreatePlaylistRequest request);
 
@@ -145,19 +145,14 @@ public interface ApiService {
     @GET("playlists/user/{userId}")
     Call<List<Playlist>> getUserPlaylists(@Path("userId") int userId);
 
-    // Search
+    // Search Endpoint
     @GET("search")
     Call<SearchResponse> search(@Query("query") String query, @Query("type") String type);
 
-    // Sound
+    // Sound Endpoints
     @GET("sounds/{id}")
     Call<SoundResponse> getSound(@Path("id") int id);
 
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
-
-    // Uncomment to implement upload if needed in the future
-    // @Multipart
-    // @POST("sounds")
-    // Call<UploadSoundResponse> uploadSound(...);
 }
