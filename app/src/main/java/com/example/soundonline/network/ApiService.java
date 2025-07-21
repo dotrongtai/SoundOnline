@@ -29,19 +29,15 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+
 public interface ApiService {
 
-    // Auth Endpoints
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
     @POST("auth/register")
     Call<LoginResponse> register(@Body RegisterRequest registerRequest);
 
-    @GET("auth/google")
-    Call<GoogleAuthResponse> googleAuth();
-
-    // User Endpoints
     @GET("users/{id}")
     Call<User> getUserProfile(@Path("id") int id);
 
@@ -51,14 +47,18 @@ public interface ApiService {
     @GET("users/{id}/likes")
     Call<List<Liked>> getUserLikedTracks(@Path("id") int userId);
 
-    @GET("users/{id}/followers")
-    Call<FollowersResponse> getFollowers(@Path("id") int id);
+    @GET("playlists/user/{userId}")
+    Call<List<Playlist>> getUserPlaylists(@Path("userId") int userId);
 
-    @GET("users/{id}/following")
-    Call<FollowingResponse> getFollowing(@Path("id") int id);
+    // ✅ NEW: Get trending categories
+    @GET("categories/trending")
+    Call<List<Category>> getTrendingCategories();
 
-    @GET("users/{id}/history")
-    Call<UserHistoryResponse> getUserHistory(@Path("id") int id);
+    // Auth Endpoints
+
+
+    @GET("Auth/google")
+    Call<GoogleAuthResponse> googleAuth();
 
     // Admin Endpoints
     @GET("admin/users")
@@ -75,7 +75,7 @@ public interface ApiService {
     Call<CreateAlbumResponse> createAlbum(@Body CreateAlbumRequest request);
 
     @GET("Albums")
-    Call<AlbumsResponse> getAlbums();
+    Call<List<Album>> getAlbums();
 
     @GET("Albums/{albumId}")
     Call<AlbumResponse> getAlbum(@Path("albumId") int albumId);
@@ -90,8 +90,6 @@ public interface ApiService {
     @GET("categories")
     Call<CategoriesResponse> getCategories();
 
-    @GET("categories/trending")
-    Call<List<Category>> getTrendingCategories();
 
     @GET("categories/{id}/sounds")
     Call<CategorySoundsResponse> getCategorySounds(@Path("id") int id);
@@ -142,17 +140,42 @@ public interface ApiService {
     @DELETE("Playlists/{playlistId}")
     Call<Void> deletePlaylist(@Path("playlistId") int playlistId);
 
-    @GET("playlists/user/{userId}")
-    Call<List<Playlist>> getUserPlaylists(@Path("userId") int userId);
 
     // Search Endpoint
     @GET("search")
     Call<SearchResponse> search(@Query("query") String query, @Query("type") String type);
 
     // Sound Endpoints
+//    @Multipart
+//    @POST("Sounds")
+//    Call<UploadSoundResponse> uploadSound(
+//            @Part("Title") String title,
+//            @Part("ArtistName") String artistName,
+//            @Part("AlbumId") int albumId,
+//            @Part("CategoryId") int categoryId,
+//            @Part("Duration") int duration,
+//            @Part("File") RequestBody file,
+//            @Part("CoverImageUrl") String coverImageUrl,
+//            @Part("Lyrics") String lyrics,
+//            @Part("UploadedBy") int uploadedBy,
+//            @Part("IsPublic") boolean isPublic
+//    );
+
     @GET("sounds/{id}")
     Call<SoundResponse> getSound(@Path("id") int id);
 
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
+
+    // User Endpoints
+    @GET("users/{id}/followers")
+    Call<FollowersResponse> getFollowers(@Path("id") int id);
+
+    @GET("users/{id}/following")
+    Call<FollowingResponse> getFollowing(@Path("id") int id);
+
+    @GET("users/{id}/history")
+    Call<UserHistoryResponse> getUserHistory(@Path("id") int id);
+
+
 }
