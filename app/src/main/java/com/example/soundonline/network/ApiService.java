@@ -17,6 +17,7 @@ import com.example.soundonline.network.Sound.*;
 import com.example.soundonline.network.User.*;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -38,11 +39,14 @@ public interface ApiService {
     @POST("auth/register")
     Call<LoginResponse> register(@Body RegisterRequest registerRequest);
 
-    @GET("users/{id}")
-    Call<User> getUserProfile(@Path("id") int id);
+    @GET("Users/{id}") // Sửa thành uppercase /Users để khớp với Postman
+    Call<User> getUser(@Path("id") int userId);
 
     @PUT("users/{id}")
-    Call<User> updateUserProfile(@Path("id") int id, @Body UpdateProfileRequest updateProfileRequest);
+    Call<User> updateUser(@Path("id") int userId, @Body User user);
+
+    @POST("users/change-password")
+    Call<Map<String, Object>> changePassword(@Body Map<String, String> request);
 
     @GET("users/{id}/likes")
     Call<List<Liked>> getUserLikedTracks(@Path("id") int userId);

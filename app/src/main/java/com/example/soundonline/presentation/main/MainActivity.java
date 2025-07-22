@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -24,6 +25,8 @@ import com.example.soundonline.model.Playlist;
 import com.example.soundonline.network.Album.AlbumsResponse;
 import com.example.soundonline.network.ApiService;
 import com.example.soundonline.presentation.auth.Login;
+import com.example.soundonline.presentation.library.CategoryActivity;
+import com.example.soundonline.presentation.library.ProfileActivity;
 
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class MainActivity extends ComponentActivity {
     private TrendingCategoryAdapter trendingCategoryAdapter;
     private AlbumAdapter albumAdapter;
     private int userId;
+    private Button btnCategory, btnProfile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,13 +61,41 @@ public class MainActivity extends ComponentActivity {
         rvPlaylist = findViewById(R.id.rvPlaylist);
         rvFavorite = findViewById(R.id.rvFavorite);
         rvAlbum = findViewById(R.id.rvAlbum);
+        btnCategory = findViewById(R.id.btnCategory);
+        btnProfile = findViewById(R.id.btnProfile);
         // Cài đặt layout manager
         rvTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvFavorite.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)); // Hiển thị like dọc
         rvAlbum.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+// Lấy userId và token từ SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
+        userId = getUserIdFromPreferences();
+        String token = prefs.getString("jwt_token", "");
+        Log.d("MainActivity", "Received userId: " + userId + ", token: " + token);
 
-
+        // Kiểm tra userId và token
+        if (userId == -1 || token.isEmpty()) {
+            Toast.makeText(this, "Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, Login.class));
+            finish();
+            return;
+        }
+        // Xử lý sự kiện click cho btnCategory
+        btnCategory.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+            startActivity(intent);
+        });
+        btnProfile.setOnClickListener(v -> {
+            if (userId == -1) {
+                Toast.makeText(this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, Login.class));
+            } else {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("user_id", userId);
+                startActivity(intent);
+            }
+        });
         // Lấy userId từ SharedPreferences
         userId = getUserIdFromPreferences();
 

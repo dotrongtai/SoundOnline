@@ -42,6 +42,21 @@
             android:name=".presentation.library.LibraryActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.library.CategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.SoundsByCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.auth.Login"
             android:exported="true">
             <intent-filter>

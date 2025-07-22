@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".presentation.library.ProfileActivity">
+
+    <!-- Avatar -->
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Avatar"
+        app:srcCompat="@drawable/img" />
+
+    <!-- Username -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên người dùng: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="dotai1234" />
+    </LinearLayout>
+
+    <!-- Email -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="tai@gmail.com" />
+    </LinearLayout>
+
+    <!-- First Name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvFirstName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="string1" />
+    </LinearLayout>
+
+    <!-- Last Name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Họ: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvLastName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="string" />
+    </LinearLayout>
+
+    <!-- Date of Birth -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày sinh: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvDateOfBirth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="2025-07-21" />
+    </LinearLayout>
+
+    <!-- Gender -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giới tính: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="string" />
+    </LinearLayout>
+
+    <!-- Country -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quốc gia: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvCountry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="string" />
+    </LinearLayout>
+
+    <!-- Bio -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tiểu sử: "
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvBio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="string" />
+    </LinearLayout>
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:text="Chỉnh sửa hồ sơ" />
+
+    <Button
+        android:id="@+id/btnChangePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:text="Đổi mật khẩu" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Quay lại" />
+
+</LinearLayout>
