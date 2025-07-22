@@ -58,6 +58,9 @@ public interface ApiService {
     @GET("categories/trending")
     Call<List<Category>> getTrendingCategories();
 
+
+    //Sound Endpoints
+
     // Auth Endpoints
 
 
@@ -128,8 +131,8 @@ public interface ApiService {
     Call<MyTracksResponse> getMyTracks();
 
     // Like Endpoint
-    @POST("likes")
-    Call<LikeResponse> like(@Body LikeRequest request);
+    @POST("Like")
+    Call<LikeToggleResponse> toggleLike(@Body Liked request);
 
     // Playlist Endpoints
     @POST("Playlists")
@@ -179,7 +182,7 @@ public interface ApiService {
     Call<FollowingResponse> getFollowing(@Path("id") int id);
 
     @GET("users/{id}/history")
-    Call<UserHistoryResponse> getUserHistory(@Path("id") int id);
+    Call<List<History>> getUserHistory(@Path("id") int id);
 
 
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -36,6 +37,7 @@ public class Login extends ComponentActivity {
 
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
+    private TextView tvRegister;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +47,11 @@ public class Login extends ComponentActivity {
         edtEmail = findViewById(R.id.et_email);
         edtPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
-
+        tvRegister = findViewById(R.id.tv_register);
+        tvRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, Register.class);
+            startActivity(intent);
+        });
         btnLogin.setOnClickListener(view -> performLogin());
     }
 
