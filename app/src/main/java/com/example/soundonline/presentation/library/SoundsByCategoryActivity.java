@@ -92,7 +92,7 @@ public class SoundsByCategoryActivity extends AppCompatActivity {
                         soundList.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            Sound sound = new Sound();
+                            Sound sound = new Sound(jsonObject.getInt("soundId"));
                             sound.setSoundId(jsonObject.getInt("soundId"));
                             sound.setTitle(jsonObject.getString("title"));
                             sound.setArtistName(jsonObject.getString("artistName"));

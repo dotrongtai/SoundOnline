@@ -154,7 +154,6 @@ public class MainActivity extends ComponentActivity {
                 // Dừng nhạc trước khi đx
                 MediaPlayerManager.stop();
                 // Xóa SharedPreferences
-                SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.clear();
                 editor.apply();
