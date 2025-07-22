@@ -30,6 +30,7 @@ import com.example.soundonline.model.Playlist;
 import com.example.soundonline.network.Album.AlbumsResponse;
 import com.example.soundonline.network.ApiService;
 import com.example.soundonline.presentation.auth.Login;
+import com.example.soundonline.presentation.library.LibraryActivity;
 
 import java.util.List;
 
@@ -134,7 +135,11 @@ public class MainActivity extends ComponentActivity {
             fetchTrendingCategories();
             fetchLikedItems(userId);
             fetchAlbums();
+
+
         }
+        setupBottomNavigation();
+
     }
 
     private int getUserIdFromPreferences() {
@@ -294,5 +299,14 @@ public class MainActivity extends ComponentActivity {
                 Log.e("MainActivity", "Lỗi trending", t);
             }
         });
+    }
+    private void setupBottomNavigation() {
+
+
+        findViewById(R.id.btnLibrary).setOnClickListener(v -> {
+            startActivity(new Intent(this, LibraryActivity.class));
+            finish();
+        });
+
     }
 }
