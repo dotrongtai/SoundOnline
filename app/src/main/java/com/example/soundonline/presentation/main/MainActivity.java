@@ -78,9 +78,9 @@ public class MainActivity extends ComponentActivity {
         miniTitle = findViewById(R.id.miniPlayerTitle);
         btnMiniPlay = findViewById(R.id.miniPlayerPlayPause);
 
-        updateMiniPlayer(); // Gọi sau khi ánh xạ
+        updateMiniPlayer();
 
-        // Cài đặt layout manager
+        // layout
         rvTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvFavorite.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -90,39 +90,40 @@ public class MainActivity extends ComponentActivity {
         userId = getUserIdFromPreferences();
 
         if (userId == -1) {
-            // Chưa đăng nhập
+
             Toast.makeText(this, "Vui lòng đăng nhập để sử dụng đầy đủ tính năng.", Toast.LENGTH_SHORT).show();
-            btnLogin.setVisibility(View.VISIBLE); // Hiển thị nút Login
+            btnLogin.setVisibility(View.VISIBLE);
             btnLogin.setOnClickListener(v -> {
                 startActivity(new Intent(this, Login.class));
                 finish();
             });
 
-            // Ẩn các phần phụ thuộc userId
+
             tvPlaylistTitle.setVisibility(View.GONE);
             rvPlaylist.setVisibility(View.GONE);
             tvLikedTitle.setVisibility(View.GONE);
             rvFavorite.setVisibility(View.GONE);
             btnLogout.setVisibility(View.GONE);
 
-            // Chỉ gọi các API không phụ thuộc userId
+
             fetchAlbums();
             fetchTrendingCategories();
         } else {
             // Đã đăng nhập
-            btnLogin.setVisibility(View.GONE); // Ẩn nút Login
+            btnLogin.setVisibility(View.GONE);
             tvPlaylistTitle.setVisibility(View.VISIBLE);
             rvPlaylist.setVisibility(View.VISIBLE);
             tvLikedTitle.setVisibility(View.VISIBLE);
             rvFavorite.setVisibility(View.VISIBLE);
             btnLogout.setVisibility(View.VISIBLE);
-
             btnLogout.setOnClickListener(v -> {
+                // Dừng nhạc trước khi đx
+                MediaPlayerManager.stop();
+                // Xóa SharedPreferences
                 SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.clear();
                 editor.apply();
-
                 Toast.makeText(MainActivity.this, "Đã đăng xuất.", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, Login.class));
                 finish();
@@ -145,14 +146,14 @@ public class MainActivity extends ComponentActivity {
             miniPlayer.setVisibility(View.VISIBLE);
             miniTitle.setText("🎵 " + MediaPlayerManager.currentTitle);
 
-            // Cập nhật icon Play/Pause
+
             if (MediaPlayerManager.isPlaying()) {
                 btnMiniPlay.setImageResource(R.drawable.ic_pause);
             } else {
                 btnMiniPlay.setImageResource(R.drawable.ic_play_arrow);
             }
 
-            // Sự kiện Play/Pause
+
             btnMiniPlay.setOnClickListener(v -> {
                 if (MediaPlayerManager.isPlaying()) {
                     MediaPlayerManager.pause();
@@ -163,7 +164,7 @@ public class MainActivity extends ComponentActivity {
                 }
             });
 
-            // Click Mini Player để mở lại PlayerActivity
+
             miniPlayer.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, com.example.soundonline.presentation.player.PlayerActivity.class);
                 intent.putExtra("title", MediaPlayerManager.currentTitle);
@@ -171,6 +172,8 @@ public class MainActivity extends ComponentActivity {
                 intent.putExtra("artist", MediaPlayerManager.currentArtist);
                 intent.putExtra("uploader", MediaPlayerManager.currentUploader);
                 intent.putExtra("image", MediaPlayerManager.currentImage);
+                intent.putExtra("songId", MediaPlayerManager.currentSongId);
+
                 startActivity(intent);
             });
         } else {
@@ -190,7 +193,7 @@ public class MainActivity extends ComponentActivity {
                         rvPlaylist.setVisibility(View.VISIBLE);
                         tvPlaylistTitle.setVisibility(View.VISIBLE);
                     } else {
-                        // Ẩn nếu không có dữ liệu
+
                         rvPlaylist.setVisibility(View.GONE);
                         tvPlaylistTitle.setVisibility(View.GONE);
                     }
@@ -266,7 +269,10 @@ public class MainActivity extends ComponentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateMiniPlayer(); // Cập nhật MiniPlayer khi quay lại
+        updateMiniPlayer();
+        if (userId != -1) {
+            fetchLikedItems(userId); // 🔁 Làm mới danh sách yêu thích
+        }// Cập nhật MiniPlayer khi quay lại
     }
 
     private void fetchTrendingCategories() {

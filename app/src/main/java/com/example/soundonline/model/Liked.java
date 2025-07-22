@@ -6,6 +6,11 @@ public class Liked {
     private Sound sound;
     private String likedAt;
 
+    public Liked(int userId, Sound sound) {
+        this.userId = userId;
+        this.sound = sound;
+    }
+
     public int getLikeId() {
         return likeId;
     }

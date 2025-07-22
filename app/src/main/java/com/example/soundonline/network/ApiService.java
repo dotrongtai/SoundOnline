@@ -127,8 +127,8 @@ public interface ApiService {
     Call<MyTracksResponse> getMyTracks();
 
     // Like Endpoint
-    @POST("likes")
-    Call<LikeResponse> like(@Body LikeRequest request);
+    @POST("Like")
+    Call<LikeToggleResponse> toggleLike(@Body Liked request);
 
     // Playlist Endpoints
     @POST("Playlists")
