@@ -22,7 +22,9 @@ public class Sound implements Serializable {
     private String uploaderName;
 
     // Getters and Setters
-
+    public Sound(int soundId) {
+        this.soundId = soundId;
+    }
     public int getSoundId() {
         return soundId;
     }

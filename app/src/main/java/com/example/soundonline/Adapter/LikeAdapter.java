@@ -56,6 +56,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
             intent.putExtra("audioUrl", song.getFileUrl());
             intent.putExtra("artist", song.getArtistName());
             intent.putExtra("uploader", song.getUploaderName());
+            intent.putExtra("songId", String.valueOf(song.getSoundId())); // Thêm songId
             context.startActivity(intent);
         });
     }
@@ -74,7 +75,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
             super(itemView);
             imgSong = itemView.findViewById(R.id.imgSong);
             txtSongTitle = itemView.findViewById(R.id.txtSongTitle);
-            btnPlay = itemView.findViewById(R.id.btnPlay); // Đảm bảo bạn có btnPlay trong item_like_song.xml
+            btnPlay = itemView.findViewById(R.id.btnPlay);
         }
     }
 }
