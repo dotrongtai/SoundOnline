@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.soundonline.presentation.library.LibraryActivity;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -135,6 +135,8 @@ public class MainActivity extends ComponentActivity {
             fetchLikedItems(userId);
             fetchAlbums();
         }
+        setupBottomNavigation();
+
     }
 
     private int getUserIdFromPreferences() {
@@ -294,5 +296,14 @@ public class MainActivity extends ComponentActivity {
                 Log.e("MainActivity", "Lỗi trending", t);
             }
         });
+    }
+    private void setupBottomNavigation() {
+
+
+        findViewById(R.id.btnLibrary).setOnClickListener(v -> {
+            startActivity(new Intent(this, LibraryActivity.class));
+            finish();
+        });
+
     }
 }

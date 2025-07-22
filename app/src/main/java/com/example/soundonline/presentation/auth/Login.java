@@ -75,9 +75,7 @@ public class Login extends ComponentActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
-
                     saveLoginInfo(loginResponse);
-
                     Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     Log.d("Login", "Token: " + loginResponse.getToken());
 
