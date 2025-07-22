@@ -86,12 +86,16 @@ public class PlayerActivity extends AppCompatActivity {
 
         // Bắt đầu phát nhạc
         Log.d("PlayerActivity", "Starting playback with audioUrl: " + audioUrl);
-        if (MediaPlayerManager.getMediaPlayer() == null || !MediaPlayerManager.isMediaPrepared()) {
-            MediaPlayerManager.play(this, audioUrl, title, artist, uploader, imageUrl,songId);
-        } else {
-            Log.d("PlayerActivity", "MediaPlayer is already playing, not restarting");
+        if (!audioUrl.equals(MediaPlayerManager.currentUrl)) {
+            Log.d("PlayerActivity", "Audio URL changed, restarting MediaPlayer with new song");
+            MediaPlayerManager.stop(); // Dừng bài cũ
+            MediaPlayerManager.play(this, audioUrl, title, artist, uploader, imageUrl, songId);
+        } else if (!MediaPlayerManager.isPlaying()) {
+            MediaPlayerManager.resume();
         }
-        btnPlay.setImageResource(R.drawable.ic_pause); // Giả sử đang phát
+
+        btnPlay.setImageResource(R.drawable.ic_pause); // cập nhật icon
+
 
         // Kiểm tra trạng thái thích ban đầu
         if (songId != null) {
