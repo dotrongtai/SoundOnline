@@ -178,7 +178,7 @@ public interface ApiService {
     Call<FollowingResponse> getFollowing(@Path("id") int id);
 
     @GET("users/{id}/history")
-    Call<UserHistoryResponse> getUserHistory(@Path("id") int id);
+    Call<List<History>> getUserHistory(@Path("id") int id);
 
 
 }
