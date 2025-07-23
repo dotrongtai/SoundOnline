@@ -80,6 +80,13 @@
             android:name=".presentation.player.UploadSoundActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.library.EditSoundActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.ManageSoundsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true">
 

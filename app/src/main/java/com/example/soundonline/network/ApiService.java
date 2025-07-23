@@ -200,6 +200,13 @@ public interface ApiService {
 
     @GET("users/{id}/history")
     Call<List<History>> getUserHistory(@Path("id") int id);
+    @GET("admin/AllSounds")
+    Call<List<SoundAdminResponse>> getAllSounds();
 
+    @GET("admin/by-username")
+    Call<List<SoundAdminResponse>> getSoundsByUsername(@Query("username") String username);
+
+    @PUT("admin/{id}")
+    Call<Void> updateSound(@Path("id") int id, @Body UpdateSoundRequest request);
 
 }
