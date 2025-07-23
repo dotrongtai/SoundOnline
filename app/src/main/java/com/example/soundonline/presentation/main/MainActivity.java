@@ -57,7 +57,7 @@ public class MainActivity extends ComponentActivity {
     private TrendingCategoryAdapter trendingCategoryAdapter;
     private AlbumAdapter albumAdapter;
     private int userId;
-private Button btnCategory, btnProfile, btnDashboard, btnUpload;
+private Button btnCategory, btnProfile, btnDashboard;
 private Button btnLogin;
 private TextView tvPlaylistTitle, tvLikedTitle;
 private Button btnLogout;
@@ -83,7 +83,6 @@ private ImageButton btnMiniPlay;
         // Cài đặt layout manager
         btnLogin = findViewById(R.id.btnLogin);
         btnLogout = findViewById(R.id.btnLogout);
-        btnUpload = findViewById(R.id.btnUpload);
         tvPlaylistTitle = findViewById(R.id.tvPlaylistTitle);
         tvLikedTitle = findViewById(R.id.tvLikedTitle);
         miniPlayer = findViewById(R.id.miniPlayer);
