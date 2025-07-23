@@ -1,74 +1,78 @@
- package com.example.soundonline.Adapter;
+package com.example.soundonline.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast; // Example: for showing a click
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
-import com.example.soundonline.model.Sound; // Import your Sound model
+import com.example.soundonline.model.Sound;
+import com.example.soundonline.presentation.player.PlayerActivity;
+import com.example.soundonline.presentation.player.PlayerActivityForSearch;
 
 import java.util.List;
 
 public class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.SoundViewHolder> {
 
     private Context context;
-    private List<Sound> sounds;
+    private List<Sound> soundList;
 
-    public SoundAdapter(Context context, List<Sound> sounds) {
+    public SoundAdapter(Context context, List<Sound> soundList) {
         this.context = context;
-        this.sounds = sounds;
+        this.soundList = soundList;
     }
 
     @NonNull
     @Override
     public SoundViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_sound, parent, false); // Assuming you have item_sound.xml
+        View view = LayoutInflater.from(context).inflate(R.layout.item_sound, parent, false);
         return new SoundViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SoundViewHolder holder, int position) {
-        Sound sound = sounds.get(position);
-        holder.soundTitle.setText(sound.getTitle());
-        holder.soundArtist.setText(sound.getArtistName());
-        // You can also format and display duration here if needed
-        // holder.soundDuration.setText(formatDuration(sound.getDuration()));
+        Sound sound = soundList.get(position);
 
-        holder.itemView.setOnClickListener(v -> {
-            // Handle song click (e.g., start playback)
-            Toast.makeText(context, "Playing: " + sound.getTitle(), Toast.LENGTH_SHORT).show();
-            // You would typically start a service or play the sound here
+        holder.textTitle.setText(sound.getTitle());
+        holder.textArtist.setText(sound.getArtistName());
+
+        Glide.with(context)
+                .load(sound.getCoverImageUrl())
+                .error(R.drawable.img) // fallback image
+                .into(holder.imageCover);
+
+        // Gán sự kiện click nút "Play"
+        holder.btnPlay.setOnClickListener(v -> {
+            Intent intent = new Intent(context, PlayerActivityForSearch.class);
+            intent.putExtra("sound", sound); // Truyền Sound (implements Serializable)
+            context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return sounds != null ? sounds.size() : 0;
+        return soundList != null ? soundList.size() : 0;
     }
 
     public static class SoundViewHolder extends RecyclerView.ViewHolder {
-        TextView soundTitle;
-        TextView soundArtist;
-        // TextView soundDuration; // If you add duration to your item_sound.xml
+        ImageView imageCover;
+        TextView textTitle, textArtist;
+        Button btnPlay;
 
         public SoundViewHolder(@NonNull View itemView) {
             super(itemView);
-            soundTitle = itemView.findViewById(R.id.textSoundTitle); // Assuming ID in item_sound.xml
-            soundArtist = itemView.findViewById(R.id.textSoundArtist); // Assuming ID in item_sound.xml
-            // soundDuration = itemView.findViewById(R.id.textSoundDuration);
+            imageCover = itemView.findViewById(R.id.imageCover);
+            textTitle = itemView.findViewById(R.id.textTitle);
+            textArtist = itemView.findViewById(R.id.textArtist);
+            btnPlay = itemView.findViewById(R.id.btnPlay);
         }
-    }
-
-    // Helper method to format duration (optional)
-    private String formatDuration(int durationInSeconds) {
-        int minutes = durationInSeconds / 60;
-        int seconds = durationInSeconds % 60;
-        return String.format("%02d:%02d", minutes, seconds);
     }
 }

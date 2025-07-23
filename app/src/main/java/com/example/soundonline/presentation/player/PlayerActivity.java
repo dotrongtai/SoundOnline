@@ -1,5 +1,6 @@
 package com.example.soundonline.presentation.player;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.example.soundonline.network.Like.LikeToggleResponse;
 import com.example.soundonline.model.Liked;
 import com.example.soundonline.model.Sound;
 import com.example.soundonline.network.ApiService;
+import com.example.soundonline.presentation.playlist.commentActivity;
 
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +48,9 @@ public class PlayerActivity extends AppCompatActivity {
     private boolean isSongLiked = false;
     private String songId;
     private String audioUrl;
+    ImageButton btnComment;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,8 @@ public class PlayerActivity extends AppCompatActivity {
         btnPlay = findViewById(R.id.btnPlay);
         btnDown = findViewById(R.id.btnDown);
         btnLike = findViewById(R.id.btnLike);
+        btnComment = findViewById(R.id.btnComment);
+
 
         // Lấy dữ liệu từ Intent
         Intent intent = getIntent();
@@ -70,6 +76,16 @@ public class PlayerActivity extends AppCompatActivity {
         audioUrl = intent.getStringExtra("audioUrl");
         String artist = intent.getStringExtra("artist");
         songId = intent.getStringExtra("songId");
+
+        // Nhận dữ liệu từ Intent
+        Sound sound = (Sound) intent.getSerializableExtra("sound");
+        int soundId = intent.getIntExtra("soundId", -1); // -1 là giá trị mặc định nếu null
+        // Khi gửi Intent
+        btnComment.setOnClickListener(v -> {
+            Intent commentIntent = new Intent(PlayerActivity.this, commentActivity.class);
+            commentIntent.putExtra("soundId", soundId); // send soundId
+            startActivity(commentIntent);
+        });
 
         if (title == null || imageUrl == null || audioUrl == null) {
             Log.e("PlayerActivity", "Missing required intent extras: title=" + title + ", imageUrl=" + imageUrl + ", audioUrl=" + audioUrl + ", songId=" + songId);

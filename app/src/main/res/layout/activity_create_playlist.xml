@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="#7B4FBD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        app:title="Playlists"
+        app:navigationIcon="@drawable/ic_menu"
+        app:titleTextColor="@android:color/white"
+        />
+
+    <!-- Nội dung chính -->
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Nhập tên playlist -->
+        <EditText
+            android:id="@+id/etPlaylistName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#6200EE"
+            android:hint=" playlist name"
+            android:inputType="text"
+            android:padding="12dp" />
+        <EditText
+            android:id="@+id/etPlaylistDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#6200EE"
+            android:hint=" playlist description"
+            android:inputType="text"
+            android:padding="12dp" />
+
+        <!-- Nút Add -->
+        <Button
+            android:id="@+id/btAddPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#7B4FBD"
+            android:text="add playlist"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

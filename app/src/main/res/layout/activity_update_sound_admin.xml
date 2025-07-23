@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ScrollView chứa form -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chỉnh sửa bài hát"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSoundId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="ID: "
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/etSoundName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Tên bài hát"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tvSoundId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etArtistName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Tên nghệ sĩ"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etSoundName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etCategoryId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="ID Thể loại"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etArtistName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etAlbumId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="ID Album"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etCategoryId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etDuration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Thời lượng (giây)"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etAlbumId"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etFileUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="URL File"
+            android:inputType="textUri"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etDuration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etCoverImageUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="URL Ảnh bìa"
+            android:inputType="textUri"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etFileUrl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etLyrics"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Lời bài hát"
+            android:inputType="textMultiLine"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etCoverImageUrl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etPlayCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Lượt phát"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etLyrics"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etLikeCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Lượt thích"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etPlayCount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <EditText
+            android:id="@+id/etUploadedBy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="ID Người tải lên"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etLikeCount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <CheckBox
+            android:id="@+id/cbIsActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hoạt động"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/etUploadedBy"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <CheckBox
+            android:id="@+id/cbIsPublic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Công khai"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/cbIsActive"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lưu"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/cbIsPublic"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/cbIsPublic"
+            app:layout_constraintEnd_toStartOf="@id/btnSave"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
+    <!-- ProgressBar hiển thị giữa màn hình -->
+<ProgressBar
+android:id="@+id/progressBar"
+style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+android:layout_width="64dp"
+android:layout_height="64dp"
+android:layout_gravity="center"
+android:visibility="gone" />
+    </FrameLayout>

@@ -1,7 +1,10 @@
 package com.example.soundonline.Adapter;
 
+import static com.example.soundonline.manager.MediaPlayerManager.currentTitle;
+
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +60,8 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
             intent.putExtra("artist", song.getArtistName());
             intent.putExtra("uploader", song.getUploaderName());
             intent.putExtra("songId", String.valueOf(song.getSoundId())); // Thêm songId
+            intent.putExtra("soundId", song.getSoundId());
+            Log.d("CommentActivity", "Sound ID nhận được: " + currentTitle);
             context.startActivity(intent);
         });
     }
