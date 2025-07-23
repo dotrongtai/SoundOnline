@@ -34,7 +34,7 @@ import retrofit2.Response;
 public class PlayerActivity extends AppCompatActivity {
 
     private ImageView imageBackground;
-    private TextView textTitle, textArtist, textUploader, textCurrentTime, textDuration;
+    private TextView textTitle, textArtist, textCurrentTime, textDuration;
     private SeekBar seekBar;
     private ImageButton btnPlay, btnDown, btnLike;
     private Handler handler = new Handler();
@@ -54,7 +54,6 @@ public class PlayerActivity extends AppCompatActivity {
         imageBackground = findViewById(R.id.imageBackground);
         textTitle = findViewById(R.id.textTitle);
         textArtist = findViewById(R.id.textArtist);
-        textUploader = findViewById(R.id.textUploader);
         textCurrentTime = findViewById(R.id.textCurrentTime);
         textDuration = findViewById(R.id.textDuration);
         seekBar = findViewById(R.id.seekBar);
@@ -68,7 +67,6 @@ public class PlayerActivity extends AppCompatActivity {
         String imageUrl = intent.getStringExtra("image");
         audioUrl = intent.getStringExtra("audioUrl");
         String artist = intent.getStringExtra("artist");
-        String uploader = intent.getStringExtra("uploader");
         songId = intent.getStringExtra("songId");
 
         if (title == null || imageUrl == null || audioUrl == null) {
@@ -81,7 +79,6 @@ public class PlayerActivity extends AppCompatActivity {
         // Gán dữ liệu lên UI
         textTitle.setText(title);
         textArtist.setText(artist != null ? artist : "Unknown Artist");
-        textUploader.setText((uploader != null && !uploader.trim().isEmpty()) ? "Upload by: " + uploader : "Upload by: Unknown");
         Glide.with(this).load(imageUrl).into(imageBackground);
 
         // Bắt đầu phát nhạc
@@ -89,13 +86,12 @@ public class PlayerActivity extends AppCompatActivity {
         if (!audioUrl.equals(MediaPlayerManager.currentUrl)) {
             Log.d("PlayerActivity", "Audio URL changed, restarting MediaPlayer with new song");
             MediaPlayerManager.stop(); // Dừng bài cũ
-            MediaPlayerManager.play(this, audioUrl, title, artist, uploader, imageUrl, songId);
+            MediaPlayerManager.play(this, audioUrl, title, artist, null, imageUrl, songId);
         } else if (!MediaPlayerManager.isPlaying()) {
             MediaPlayerManager.resume();
         }
 
         btnPlay.setImageResource(R.drawable.ic_pause); // cập nhật icon
-
 
         // Kiểm tra trạng thái thích ban đầu
         if (songId != null) {
@@ -114,7 +110,7 @@ public class PlayerActivity extends AppCompatActivity {
             } else {
                 if (MediaPlayerManager.getMediaPlayer() == null || !MediaPlayerManager.isMediaPrepared()) {
                     Log.d("PlayerActivity", "MediaPlayer null or not prepared, restarting playback");
-                    MediaPlayerManager.play(this, audioUrl, title, artist, uploader, imageUrl,songId);
+                    MediaPlayerManager.play(this, audioUrl, title, artist, null, imageUrl, songId);
                 } else {
                     MediaPlayerManager.resume();
                     Log.d("PlayerActivity", "Resumed playback");
@@ -237,6 +233,5 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(updateSeekBar);
-
     }
 }
