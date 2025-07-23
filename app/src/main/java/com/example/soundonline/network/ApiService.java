@@ -53,8 +53,6 @@ public interface ApiService {
 
     @DELETE("admin/users/{id}")
     Call<Void> deleteUser(@Path("id") int userId);
-    @GET("admin/statistics")
-    Call<StatisticsResponse> getStatistics();
     @GET("Users/{id}") // Sửa thành uppercase /Users để khớp với Postman
     Call<User> getUser(@Path("id") int userId);
 
@@ -186,6 +184,8 @@ public interface ApiService {
 
     @GET("sounds/{id}")
     Call<SoundResponse> getSound(@Path("id") int id);
+    @POST("Sounds")
+    Call<UploadSoundResponse> uploadSound(@Body UploadSoundRequest request);
 
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
