@@ -58,7 +58,8 @@ public interface ApiService {
 
     @PUT("users/{id}")
     Call<User> updateUser(@Path("id") int userId, @Body User user);
-
+    @GET("api/admin/statistics")
+    Call<StatisticsResponse> getStatistics();
     @POST("users/change-password")
     Call<Map<String, Object>> changePassword(@Body Map<String, String> request);
 
