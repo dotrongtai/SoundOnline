@@ -17,6 +17,7 @@ import com.example.soundonline.network.Sound.*;
 import com.example.soundonline.network.User.*;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -37,12 +38,29 @@ public interface ApiService {
 
     @POST("auth/register")
     Call<LoginResponse> register(@Body RegisterRequest registerRequest);
+    // New Admin endpoints
+    @GET("admin/users")
+    Call<List<User>> getAllUsers();
 
-    @GET("users/{id}")
-    Call<User> getUserProfile(@Path("id") int id);
+    @POST("admin/users")
+    Call<User> createUser(@Body User user);
+
+    @GET("admin/users/{id}")
+    Call<User> getUserById(@Path("id") int userId);
+
+    @PUT("admin/users/{id}")
+    Call<User> updateUserById(@Path("id") int userId, @Body User user);
+
+    @DELETE("admin/users/{id}")
+    Call<Void> deleteUser(@Path("id") int userId);
+    @GET("Users/{id}") // Sửa thành uppercase /Users để khớp với Postman
+    Call<User> getUser(@Path("id") int userId);
 
     @PUT("users/{id}")
-    Call<User> updateUserProfile(@Path("id") int id, @Body UpdateProfileRequest updateProfileRequest);
+    Call<User> updateUser(@Path("id") int userId, @Body User user);
+
+    @POST("users/change-password")
+    Call<Map<String, Object>> changePassword(@Body Map<String, String> request);
 
     @GET("users/{id}/likes")
     Call<List<Liked>> getUserLikedTracks(@Path("id") int userId);
@@ -127,8 +145,8 @@ public interface ApiService {
     Call<MyTracksResponse> getMyTracks();
 
     // Like Endpoint
-    @POST("likes")
-    Call<LikeResponse> like(@Body LikeRequest request);
+    @POST("Like")
+    Call<LikeToggleResponse> toggleLike(@Body Liked request);
 
     // Playlist Endpoints
     @POST("Playlists")
@@ -166,6 +184,8 @@ public interface ApiService {
 
     @GET("sounds/{id}")
     Call<SoundResponse> getSound(@Path("id") int id);
+    @POST("Sounds")
+    Call<UploadSoundResponse> uploadSound(@Body UploadSoundRequest request);
 
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);

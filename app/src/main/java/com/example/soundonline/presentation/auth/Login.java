@@ -17,8 +17,10 @@ import com.example.soundonline.R;
 import com.example.soundonline.network.LoginRequest;
 import com.example.soundonline.network.LoginResponse;
 import com.example.soundonline.network.ApiService;
+import com.example.soundonline.presentation.library.AdminDashboardActivity;
 import com.example.soundonline.presentation.main.MainActivity;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,7 +37,7 @@ public class Login extends ComponentActivity {
     ApiService apiService;
 
     private EditText edtEmail, edtPassword;
-    private Button btnLogin;
+    private Button btnLogin,btnHome;
     private TextView tvRegister;
 
     @Override
@@ -47,12 +49,19 @@ public class Login extends ComponentActivity {
         edtPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
         tvRegister = findViewById(R.id.tv_register);
+        btnHome = findViewById(R.id.btn_home);
         tvRegister.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
         });
+        btnHome.setOnClickListener(v->{
+            Intent intent = new Intent(Login.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
         btnLogin.setOnClickListener(view -> performLogin());
     }
+
 
     private void performLogin() {
         String email = edtEmail.getText().toString().trim();
@@ -70,30 +79,46 @@ public class Login extends ComponentActivity {
         }
 
         LoginRequest loginRequest = new LoginRequest(email, password);
+        Log.d("Login", "Login request: email=" + email);
         apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                Log.d("Login", "API URL: " + call.request().url());
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
-
+                    Log.d("Login", "Login successful: userId=" + loginResponse.getUserId() + ", token=" + loginResponse.getToken());
                     saveLoginInfo(loginResponse);
-
-                    Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    Log.d("Login", "Token: " + loginResponse.getToken());
-
-                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    // Kiểm tra vai trò Admin
+                    boolean isAdmin = loginResponse.getRoles() != null && loginResponse.getRoles().contains("Admin");
+                    Intent intent;
+                    if (isAdmin) {
+                        Log.d("Login", "User is Admin, redirecting to AdminDashboardActivity");
+                        intent = new Intent(Login.this, AdminDashboardActivity.class);
+                    } else {
+                        Log.d("Login", "User is not Admin, redirecting to MainActivity");
+                        intent = new Intent(Login.this, MainActivity.class);
+                    }
+                    intent.putExtra("user_id", loginResponse.getUserId());
                     startActivity(intent);
+                    Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     finish();
+
                 } else {
-                    Toast.makeText(Login.this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
-                    Log.e("Login", "Lỗi: " + response.code());
+                    String errorBody = "";
+                    try {
+                        errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                    } catch (IOException e) {
+                        Log.e("Login", "Error reading errorBody: " + e.getMessage());
+                    }
+                    Log.e("Login", "Login failed: " + response.code() + ", Message: " + response.message() + ", Body: " + errorBody);
+                    runOnUiThread(() -> Toast.makeText(Login.this, "Đăng nhập thất bại: " + response.code(), Toast.LENGTH_SHORT).show());
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(Login.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("Login", "Exception", t);
+                Log.e("Login", "API connection error: " + t.getMessage());
+                runOnUiThread(() -> Toast.makeText(Login.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -105,5 +130,6 @@ public class Login extends ComponentActivity {
         editor.putInt("user_id", response.getUserId());
         editor.putString("roles", String.join(",", response.getRoles()));
         editor.apply();
+        Log.d("Login", "Saved to SharedPreferences: user_id=" + response.getUserId() + ", jwt_token=" + response.getToken() + ", roles=" + String.join(",", response.getRoles()));
     }
 }

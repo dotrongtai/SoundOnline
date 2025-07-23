@@ -248,7 +248,16 @@
             android:background="@android:color/transparent"
             android:textColor="@color/black"
             android:gravity="center" />
-
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Profile"
+            android:drawableTop="@drawable/ic_profile"
+            android:background="@android:color/transparent"
+            android:textColor="@color/black"
+            android:gravity="center" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
