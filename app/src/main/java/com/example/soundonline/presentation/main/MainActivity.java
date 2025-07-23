@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.soundonline.presentation.library.LibraryActivity;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,12 +26,12 @@ import com.example.soundonline.model.Album;
 import com.example.soundonline.model.Category;
 import com.example.soundonline.model.Liked;
 import com.example.soundonline.model.Playlist;
-import com.example.soundonline.network.Album.AlbumsResponse;
 import com.example.soundonline.network.ApiService;
 import com.example.soundonline.presentation.auth.Login;
 import com.example.soundonline.presentation.library.CategoryActivity;
-import com.example.soundonline.presentation.library.ProfileActivity;
 import com.example.soundonline.presentation.library.LibraryActivity;
+import com.example.soundonline.presentation.library.ProfileActivity;
+import com.example.soundonline.presentation.player.UploadSoundActivity;
 
 import java.util.List;
 
@@ -55,20 +54,15 @@ public class MainActivity extends ComponentActivity {
     private TrendingCategoryAdapter trendingCategoryAdapter;
     private AlbumAdapter albumAdapter;
     private int userId;
-    private Button btnCategory, btnProfile;
-    private Button btnLogin;
-    private TextView tvPlaylistTitle, tvLikedTitle;
-    private Button btnLogout;
+    private Button btnLogin, btnCategory, btnProfile, btnLogout, btnUpload;
+    private TextView tvPlaylistTitle, tvLikedTitle, miniTitle;
     private LinearLayout miniPlayer;
-    private TextView miniTitle;
     private ImageButton btnMiniPlay;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btnLogout = findViewById(R.id.btnLogout);
 
         // Ánh xạ view
         rvTrending = findViewById(R.id.rvTrending);
@@ -77,39 +71,33 @@ public class MainActivity extends ComponentActivity {
         rvAlbum = findViewById(R.id.rvAlbum);
         btnCategory = findViewById(R.id.btnCategory);
         btnProfile = findViewById(R.id.btnProfile);
-        // Cài đặt layout manager
         btnLogin = findViewById(R.id.btnLogin);
+        btnLogout = findViewById(R.id.btnLogout);
+        btnUpload = findViewById(R.id.btnUpload);
         tvPlaylistTitle = findViewById(R.id.tvPlaylistTitle);
         tvLikedTitle = findViewById(R.id.tvLikedTitle);
         miniPlayer = findViewById(R.id.miniPlayer);
         miniTitle = findViewById(R.id.miniPlayerTitle);
         btnMiniPlay = findViewById(R.id.miniPlayerPlayPause);
 
-        updateMiniPlayer();
-
-        // layout
+        // Cài đặt layout manager
         rvTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvPlaylist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvFavorite.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvAlbum.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-// Lấy userId và token từ SharedPreferences
+
+        // Lấy userId và token từ SharedPreferences
         SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
         userId = getUserIdFromPreferences();
         String token = prefs.getString("jwt_token", "");
         Log.d("MainActivity", "Received userId: " + userId + ", token: " + token);
 
-        // Kiểm tra userId và token
-        if (userId == -1 || token.isEmpty()) {
-            Toast.makeText(this, "Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, Login.class));
-            finish();
-            return;
-        }
-        // Xử lý sự kiện click cho btnCategory
+        // Xử lý sự kiện click
         btnCategory.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
             startActivity(intent);
         });
+
         btnProfile.setOnClickListener(v -> {
             if (userId == -1) {
                 Toast.makeText(this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
@@ -120,76 +108,94 @@ public class MainActivity extends ComponentActivity {
                 startActivity(intent);
             }
         });
-        // Lấy userId từ SharedPreferences
-        userId = getUserIdFromPreferences();
 
-        if (userId == -1) {
-
-            Toast.makeText(this, "Vui lòng đăng nhập để sử dụng đầy đủ tính năng.", Toast.LENGTH_SHORT).show();
-            btnLogin.setVisibility(View.VISIBLE);
-            btnLogin.setOnClickListener(v -> {
+        btnUpload.setOnClickListener(v -> {
+            if (userId == -1) {
+                Toast.makeText(this, "Vui lòng đăng nhập để tải lên bài hát", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, Login.class));
-                finish();
-            });
+            } else {
+                Intent intent = new Intent(MainActivity.this, UploadSoundActivity.class);
+                intent.putExtra("user_id", userId);
+                startActivity(intent);
+            }
+        });
 
+        btnLogin.setOnClickListener(v -> {
+            startActivity(new Intent(this, Login.class));
+        });
 
-            tvPlaylistTitle.setVisibility(View.GONE);
-            rvPlaylist.setVisibility(View.GONE);
-            tvLikedTitle.setVisibility(View.GONE);
-            rvFavorite.setVisibility(View.GONE);
-            btnLogout.setVisibility(View.GONE);
+        btnLogout.setOnClickListener(v -> {
+            // Dừng nhạc
+            MediaPlayerManager.stop();
+            // Xóa SharedPreferences
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.apply();
+            // Cập nhật trạng thái không đăng nhập
+            userId = -1;
+            updateUINonLoggedIn();
+            Toast.makeText(MainActivity.this, "Đã đăng xuất.", Toast.LENGTH_SHORT).show();
+        });
 
+        // Cập nhật UI dựa trên trạng thái đăng nhập
+        updateUI();
 
-            fetchAlbums();
-            fetchTrendingCategories();
-        } else {
-            // Đã đăng nhập
-            btnLogin.setVisibility(View.GONE);
-            tvPlaylistTitle.setVisibility(View.VISIBLE);
-            rvPlaylist.setVisibility(View.VISIBLE);
-            tvLikedTitle.setVisibility(View.VISIBLE);
-            rvFavorite.setVisibility(View.VISIBLE);
-            btnLogout.setVisibility(View.VISIBLE);
-            btnLogout.setOnClickListener(v -> {
-                // Dừng nhạc trước khi đx
-                MediaPlayerManager.stop();
-                // Xóa SharedPreferences
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.clear();
-                editor.apply();
-                Toast.makeText(MainActivity.this, "Đã đăng xuất.", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, Login.class));
-                finish();
-            });
-
-
-            fetchUserPlaylists(userId);
-            fetchTrendingCategories();
-            fetchLikedItems(userId);
-            fetchAlbums();
-
-
-        }
+        // Cài đặt bottom navigation
         setupBottomNavigation();
 
+        // Cập nhật mini player
+        updateMiniPlayer();
+    }
+
+    private void updateUI() {
+        if (userId == -1) {
+            updateUINonLoggedIn();
+        } else {
+            updateUILoggedIn();
+        }
+    }
+
+    private void updateUINonLoggedIn() {
+        btnLogin.setVisibility(View.VISIBLE);
+        btnLogout.setVisibility(View.GONE);
+        btnUpload.setVisibility(View.GONE);
+        tvPlaylistTitle.setVisibility(View.GONE);
+        rvPlaylist.setVisibility(View.GONE);
+        tvLikedTitle.setVisibility(View.GONE);
+        rvFavorite.setVisibility(View.GONE);
+        fetchAlbums();
+        fetchTrendingCategories();
+    }
+
+    private void updateUILoggedIn() {
+        btnLogin.setVisibility(View.GONE);
+        btnLogout.setVisibility(View.VISIBLE);
+        btnUpload.setVisibility(View.VISIBLE);
+        tvPlaylistTitle.setVisibility(View.VISIBLE);
+        rvPlaylist.setVisibility(View.VISIBLE);
+        tvLikedTitle.setVisibility(View.VISIBLE);
+        rvFavorite.setVisibility(View.VISIBLE);
+        fetchUserPlaylists(userId);
+        fetchTrendingCategories();
+        fetchLikedItems(userId);
+        fetchAlbums();
     }
 
     private int getUserIdFromPreferences() {
         SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
         return prefs.getInt("user_id", -1);
     }
+
     private void updateMiniPlayer() {
         if (MediaPlayerManager.getMediaPlayer() != null) {
             miniPlayer.setVisibility(View.VISIBLE);
             miniTitle.setText("🎵 " + MediaPlayerManager.currentTitle);
-
 
             if (MediaPlayerManager.isPlaying()) {
                 btnMiniPlay.setImageResource(R.drawable.ic_pause);
             } else {
                 btnMiniPlay.setImageResource(R.drawable.ic_play_arrow);
             }
-
 
             btnMiniPlay.setOnClickListener(v -> {
                 if (MediaPlayerManager.isPlaying()) {
@@ -201,7 +207,6 @@ public class MainActivity extends ComponentActivity {
                 }
             });
 
-
             miniPlayer.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, com.example.soundonline.presentation.player.PlayerActivity.class);
                 intent.putExtra("title", MediaPlayerManager.currentTitle);
@@ -210,7 +215,6 @@ public class MainActivity extends ComponentActivity {
                 intent.putExtra("uploader", MediaPlayerManager.currentUploader);
                 intent.putExtra("image", MediaPlayerManager.currentImage);
                 intent.putExtra("songId", MediaPlayerManager.currentSongId);
-
                 startActivity(intent);
             });
         } else {
@@ -230,7 +234,6 @@ public class MainActivity extends ComponentActivity {
                         rvPlaylist.setVisibility(View.VISIBLE);
                         tvPlaylistTitle.setVisibility(View.VISIBLE);
                     } else {
-
                         rvPlaylist.setVisibility(View.GONE);
                         tvPlaylistTitle.setVisibility(View.GONE);
                     }
@@ -249,7 +252,6 @@ public class MainActivity extends ComponentActivity {
             }
         });
     }
-
 
     private void fetchLikedItems(int userId) {
         apiService.getUserLikedTracks(userId).enqueue(new Callback<List<Liked>>() {
@@ -291,7 +293,6 @@ public class MainActivity extends ComponentActivity {
                     Log.d("MainActivity", "Số album: " + albums.size());
                     albumAdapter = new AlbumAdapter(MainActivity.this, albums);
                     rvAlbum.setAdapter(albumAdapter);
-
                 } else {
                     Log.e("MainActivity", "Lỗi album: " + response.code() + ", Message: " + response.message());
                 }
@@ -303,13 +304,14 @@ public class MainActivity extends ComponentActivity {
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         updateMiniPlayer();
         if (userId != -1) {
-            fetchLikedItems(userId); // 🔁 Làm mới danh sách yêu thích
-        }// Cập nhật MiniPlayer khi quay lại
+            fetchLikedItems(userId); // Làm mới danh sách yêu thích
+        }
     }
 
     private void fetchTrendingCategories() {
@@ -332,13 +334,11 @@ public class MainActivity extends ComponentActivity {
             }
         });
     }
+
     private void setupBottomNavigation() {
-
-
         findViewById(R.id.btnLibrary).setOnClickListener(v -> {
             startActivity(new Intent(this, LibraryActivity.class));
             finish();
         });
-
     }
 }
