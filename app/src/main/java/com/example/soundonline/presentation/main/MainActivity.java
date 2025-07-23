@@ -11,8 +11,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.soundonline.presentation.library.AdminDashboardActivity;
 import com.example.soundonline.presentation.library.LibraryActivity;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
@@ -57,8 +55,14 @@ public class MainActivity extends ComponentActivity {
     private TrendingCategoryAdapter trendingCategoryAdapter;
     private AlbumAdapter albumAdapter;
     private int userId;
-private Button btnLogin, btnCategory, btnProfile, btnDashboard, btnLogout, btnUpload;
-private TextView tvPlaylistTitle, tvLikedTitle, miniTitle;
+
+    private Button btnCategory, btnProfile,btnDashboard,btnUpload;
+    private Button btnLogin;
+    private TextView tvPlaylistTitle, tvLikedTitle;
+    private Button btnLogout;
+    private LinearLayout miniPlayer;
+    private TextView miniTitle;
+    private ImageButton btnMiniPlay;
 
     private LinearLayout miniPlayer;
     private ImageButton btnMiniPlay;
@@ -75,7 +79,6 @@ private TextView tvPlaylistTitle, tvLikedTitle, miniTitle;
         rvAlbum = findViewById(R.id.rvAlbum);
         btnCategory = findViewById(R.id.btnCategory);
         btnProfile = findViewById(R.id.btnProfile);
-        btnDashboard = findViewById(R.id.btnDashboard);
         // Cài đặt layout manager
         btnLogin = findViewById(R.id.btnLogin);
         btnLogout = findViewById(R.id.btnLogout);
@@ -96,18 +99,8 @@ private TextView tvPlaylistTitle, tvLikedTitle, miniTitle;
         SharedPreferences prefs = getSharedPreferences("auth", Context.MODE_PRIVATE);
         userId = getUserIdFromPreferences();
         String token = prefs.getString("jwt_token", "");
-        String roles = prefs.getString("roles", "");
         Log.d("MainActivity", "Received userId: " + userId + ", token: " + token);
-// Kiểm tra vai trò Admin để hiển thị btnDashboard
-        boolean isAdmin = roles.contains("Admin");
-        btnDashboard.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
-        if (isAdmin) {
-            btnDashboard.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, AdminDashboardActivity.class);
-                intent.putExtra("user_id", userId);
-                startActivity(intent);
-            });
-        }
+
         // Kiểm tra userId và token
         if (userId == -1 || token.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
