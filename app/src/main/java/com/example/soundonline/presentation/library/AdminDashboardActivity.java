@@ -36,7 +36,7 @@ import okhttp3.Response;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
-    private Button btnManageUsers, btnBack, btnHome;
+    private Button btnManageUsers, btnBack, btnHome, btnManageSounds;
     private RecyclerView rvStatistics;
     private StatisticAdapter statisticAdapter;
     private List<Statistic> statisticList;
@@ -61,7 +61,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         btnHome = findViewById(R.id.btnHome);
         rvStatistics = findViewById(R.id.rvStatistics);
-
+        btnManageSounds=findViewById(R.id.btnManageSounds);
         // Thiết lập RecyclerView
         statisticList = new ArrayList<>();
         statisticAdapter = new StatisticAdapter(statisticList);
@@ -77,6 +77,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
         // Xử lý sự kiện nút
         btnManageUsers.setOnClickListener(v -> {
             Intent intent = new Intent(this, UserManagementActivity.class);
+            startActivity(intent);
+        });
+        btnManageSounds.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ManageSoundsActivity.class);
+            intent.putExtra("user_id", getIntent().getIntExtra("user_id", -1));
             startActivity(intent);
         });
 
