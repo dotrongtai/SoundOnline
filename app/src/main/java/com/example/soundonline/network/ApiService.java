@@ -74,7 +74,8 @@ public interface ApiService {
 
 
     //Sound Endpoints
-
+    @GET("Sound")
+    Call<List<Sound>> getSounds();
     // Auth Endpoints
 
 
@@ -120,7 +121,7 @@ public interface ApiService {
     Call<CreateCommentResponse> createComment(@Body CreateCommentRequest request);
 
     @GET("Comments/sound/{soundId}")
-    Call<SoundCommentsResponse> getSoundComments(@Path("soundId") int soundId);
+    Call<List<Comment>> getSoundComments(@Path("soundId") int soundId);
 
     @PUT("Comments/{commentId}")
     Call<UpdateCommentResponse> updateComment(@Path("commentId") int commentId, @Body UpdateCommentRequest request);
@@ -151,6 +152,8 @@ public interface ApiService {
     // Playlist Endpoints
     @POST("Playlists")
     Call<CreatePlaylistResponse> createPlaylist(@Body CreatePlaylistRequest request);
+    @GET("Playlists/{playlistId}/tracks")
+    Call<List<Sound>> getPlaylistTracks(@Path("playlistId") int playlistId);
 
     @POST("Playlists/{playlistId}/tracks")
     Call<AddTrackResponse> addTrackToPlaylist(@Path("playlistId") String playlistId, @Body AddTrackToPlaylistRequest request);
@@ -189,6 +192,8 @@ public interface ApiService {
 
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
+    @POST("Sound/available-for-playlist")
+    Call<List<Sound>> checkAvailableForPlaylist(@Body CheckAvailableForPlaylistRequest request);
 
     // User Endpoints
     @GET("users/{id}/followers")
@@ -200,5 +205,7 @@ public interface ApiService {
     @GET("users/{id}/history")
     Call<List<History>> getUserHistory(@Path("id") int id);
 
+    @POST("/api/PlaylistTrack/add-sound")
+    Call<AddSoundToPlaylistResponse> addSoundToPlaylist(@Body AddSoundToPlaylistRequest request);
 
 }

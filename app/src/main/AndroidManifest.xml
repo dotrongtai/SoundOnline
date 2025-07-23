@@ -79,10 +79,24 @@
         <activity
             android:name=".presentation.player.UploadSoundActivity"
             android:exported="false" />
+        <activity android:name=".presentation.playlist.playlistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.playlist.createPlaylist"
+            android:exported="false" />
+        <activity android:name=".presentation.playlist.PlaylistTrackActivity"
+            android:exported="false" />
+        <activity android:name=".presentation.playlist.commentActivity"
+            android:exported="false" />
+        <activity android:name=".presentation.playlist.searchActivity"
+            android:exported="false" />
+        <activity android:name=".presentation.player.PlayerActivityForSearch"
+            android:exported="false" />"
+        <activity android:name=".presentation.playlist.playlistAddToTrack"
+            android:exported="false" />
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
