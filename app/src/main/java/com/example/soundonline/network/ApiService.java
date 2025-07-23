@@ -203,10 +203,4 @@ public interface ApiService {
     @GET("admin/AllSounds")
     Call<List<SoundAdminResponse>> getAllSounds();
 
-    @GET("admin/by-username")
-    Call<List<SoundAdminResponse>> getSoundsByUsername(@Query("username") String username);
-
-    @PUT("admin/{id}")
-    Call<Void> updateSound(@Path("id") int id, @Body UpdateSoundRequest request);
-
 }
