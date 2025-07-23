@@ -1,7 +1,6 @@
 package com.example.soundonline.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
 import com.example.soundonline.model.Sound;
-import com.example.soundonline.presentation.player.PlayerActivity;
 
 import java.util.List;
 import java.util.Locale;
@@ -48,17 +46,6 @@ public class CategorySoundAdapter extends RecyclerView.Adapter<CategorySoundAdap
         holder.soundTitle.setText(sound.getTitle());
         holder.soundArtist.setText(sound.getArtistName());
         holder.soundDuration.setText(formatDuration(sound.getDuration()));
-        // Xử lý sự kiện click để chuyển hướng đến PlayerActivity
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, PlayerActivity.class);
-            intent.putExtra("songId", String.valueOf(sound.getSoundId()));
-            intent.putExtra("title", sound.getTitle());
-            intent.putExtra("artist", sound.getArtistName() != null ? sound.getArtistName() : "Unknown Artist");
-            intent.putExtra("audioUrl", sound.getFileUrl());
-            intent.putExtra("image", sound.getCoverImageUrl());
-            intent.putExtra("uploader", sound.getUploadedBy() != null ? String.valueOf(sound.getUploadedBy()) : "Unknown");
-            context.startActivity(intent);
-        });
     }
 
     private String formatDuration(int duration) {
