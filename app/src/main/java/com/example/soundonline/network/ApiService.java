@@ -205,8 +205,10 @@ public interface ApiService {
 
     @GET("users/{id}/history")
     Call<List<History>> getUserHistory(@Path("id") int id);
-
+    @PUT("admin/{id}")
+    Call<Void> updateSound(@Path("id") int id, @Body UpdateSoundRequest request);
     @POST("/api/PlaylistTrack/add-sound")
     Call<AddSoundToPlaylistResponse> addSoundToPlaylist(@Body AddSoundToPlaylistRequest request);
-
+    @GET("admin/AllSounds")
+    Call<List<SoundAdminResponse>> getAllSounds();
 }
