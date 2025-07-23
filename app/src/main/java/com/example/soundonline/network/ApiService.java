@@ -200,7 +200,6 @@ public interface ApiService {
 
     @GET("users/{id}/history")
     Call<List<History>> getUserHistory(@Path("id") int id);
-    @GET("admin/AllSounds")
-    Call<List<SoundAdminResponse>> getAllSounds();
+
 
 }
