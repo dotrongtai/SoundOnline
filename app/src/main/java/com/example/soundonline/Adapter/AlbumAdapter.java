@@ -1,6 +1,7 @@
 package com.example.soundonline.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
 import com.example.soundonline.model.Album;
+import com.example.soundonline.presentation.library.UserAlbumDetailActivity; // Import your detail activity
 
 import java.util.List;
 
@@ -45,6 +47,16 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         holder.albumTitle.setText(album.getAlbumTitle());
         holder.artistName.setText(album.getArtistName());
         holder.genre.setText(album.getGenre() != null ? album.getGenre() : "Chưa rõ thể loại");
+
+        // --- THIS IS THE CRUCIAL CHANGE ---
+        // Set click listener for the entire item view
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, UserAlbumDetailActivity.class);
+            // Pass only the albumId here
+            intent.putExtra(UserAlbumDetailActivity.EXTRA_ALBUM_ID, album.getAlbumId());
+            context.startActivity(intent);
+        });
+        // --- END OF CRUCIAL CHANGE ---
     }
 
     @Override

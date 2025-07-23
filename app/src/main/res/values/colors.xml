@@ -8,4 +8,7 @@
     <!-- Thêm mới -->
     <color name="purple_700">#3700B3</color>
     <color name="teal_700">#018786</color>
+
+
+    <color name="gray">#B0B0B0</color>
 </resources>
