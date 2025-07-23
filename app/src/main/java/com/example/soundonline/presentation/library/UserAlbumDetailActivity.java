@@ -13,27 +13,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
-import com.example.soundonline.Adapter.SoundAdapter;
+import com.example.soundonline.Adapter.AlbumDetailAdapter; // Use the new adapter
 import com.example.soundonline.model.Album;
 import com.example.soundonline.model.Sound;
-import com.example.soundonline.network.ApiService; // Import your ApiService
+import com.example.soundonline.network.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject; // For Dagger Hilt
-import dagger.hilt.android.AndroidEntryPoint; // For Dagger Hilt
-
+import javax.inject.Inject;
+import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@AndroidEntryPoint // Add this if you are using Dagger Hilt for dependency injection
+@AndroidEntryPoint
 public class UserAlbumDetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_ALBUM_ID = "extra_album_id"; // New key for passing Album ID
+    public static final String EXTRA_ALBUM_ID = "extra_album_id";
 
-    @Inject // Inject ApiService if using Dagger Hilt
+    @Inject
     ApiService apiService;
 
     private ImageView imgDetailAlbumCover;
@@ -43,7 +42,7 @@ public class UserAlbumDetailActivity extends AppCompatActivity {
     private TextView tvHeaderTitle;
 
     private RecyclerView recyclerAlbumSongs;
-    private SoundAdapter soundAdapter;
+    private AlbumDetailAdapter albumDetailAdapter; // Changed to AlbumDetailAdapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,23 +60,27 @@ public class UserAlbumDetailActivity extends AppCompatActivity {
         recyclerAlbumSongs = findViewById(R.id.recyclerAlbumSongs);
         recyclerAlbumSongs.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize adapter with empty list
+        albumDetailAdapter = new AlbumDetailAdapter(this, new ArrayList<>());
+        recyclerAlbumSongs.setAdapter(albumDetailAdapter);
+
         // Setup Back Button
         btnBack.setOnClickListener(v -> finish());
 
         // Get Album ID from Intent
-        int albumId = getIntent().getIntExtra(EXTRA_ALBUM_ID, -1);
+        int albumId = getIntent().getIntExtra("albumId", -1);
 
         if (albumId != -1) {
             // Fetch album details using the ID
             fetchAlbumDetails(albumId);
         } else {
             Toast.makeText(this, "Không tìm thấy ID album.", Toast.LENGTH_SHORT).show();
-            finish(); // Close activity if no album ID
+            finish();
         }
     }
 
     private void fetchAlbumDetails(int albumId) {
-        apiService.getAlbum(albumId).enqueue(new Callback<Album>() { // Call the API with albumId
+        apiService.getAlbum(albumId).enqueue(new Callback<Album>() {
             @Override
             public void onResponse(Call<Album> call, Response<Album> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -96,18 +99,16 @@ public class UserAlbumDetailActivity extends AppCompatActivity {
                     // Populate the RecyclerView for songs
                     List<Sound> soundsInAlbum = album.getSounds();
                     if (soundsInAlbum != null && !soundsInAlbum.isEmpty()) {
-                        soundAdapter = new SoundAdapter(UserAlbumDetailActivity.this, soundsInAlbum);
-                        recyclerAlbumSongs.setAdapter(soundAdapter);
+                        albumDetailAdapter.updateSounds(soundsInAlbum); // Update adapter with new data
                     } else {
                         Toast.makeText(UserAlbumDetailActivity.this, "Không có bài hát nào trong album này.", Toast.LENGTH_SHORT).show();
-                        soundAdapter = new SoundAdapter(UserAlbumDetailActivity.this, new ArrayList<>()); // Set an empty adapter
-                        recyclerAlbumSongs.setAdapter(soundAdapter);
+                        albumDetailAdapter.updateSounds(new ArrayList<>()); // Set empty list
                     }
 
                 } else {
                     Log.e("UserAlbumDetailActivity", "Lỗi tải chi tiết album: " + response.code() + ", Message: " + response.message());
                     Toast.makeText(UserAlbumDetailActivity.this, "Lỗi khi tải thông tin album.", Toast.LENGTH_SHORT).show();
-                    finish(); // Close activity on error
+                    finish();
                 }
             }
 
@@ -115,7 +116,7 @@ public class UserAlbumDetailActivity extends AppCompatActivity {
             public void onFailure(Call<Album> call, Throwable t) {
                 Log.e("UserAlbumDetailActivity", "Lỗi kết nối API chi tiết album: " + t.getMessage(), t);
                 Toast.makeText(UserAlbumDetailActivity.this, "Lỗi kết nối mạng.", Toast.LENGTH_SHORT).show();
-                finish(); // Close activity on network error
+                finish();
             }
         });
     }

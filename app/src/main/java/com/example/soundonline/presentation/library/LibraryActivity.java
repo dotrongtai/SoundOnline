@@ -2,6 +2,8 @@ package com.example.soundonline.presentation.library;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +30,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recycler_view_library);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new LibraryAdapter(getLibrarySections());
@@ -43,7 +46,7 @@ public class LibraryActivity extends AppCompatActivity {
                 startActivity(intent);
             }else
             if ("Following".equals(title)) {
-                Intent intent = new Intent(this, ListeningHistoryActivity.class);
+                Intent intent = new Intent(this, FollowingActivity.class);
                 startActivity(intent);
             }else  if ("Your uploads".equals(title)) {
                 Intent intent = new Intent(this, YourUploadActivity.class);
@@ -64,7 +67,9 @@ public class LibraryActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
+
         // Set up bottom navigation
+
         setupBottomNavigation();
     }
 
@@ -73,8 +78,6 @@ public class LibraryActivity extends AppCompatActivity {
         sections.add(new LibrarySection("Liked tracks", false));
         sections.add(new LibrarySection("Albums", false));
         sections.add(new LibrarySection("Following", false));
-        sections.add(new LibrarySection("Your uploads", false));
-        sections.add(new LibrarySection("Recently played", true));
         sections.add(new LibrarySection("Listening history", true));
         return sections;
     }

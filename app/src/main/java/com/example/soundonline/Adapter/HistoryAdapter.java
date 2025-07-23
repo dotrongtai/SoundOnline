@@ -2,13 +2,13 @@ package com.example.soundonline.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log; // For logging potential parsing errors
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox; // Import CheckBox
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,142 +16,148 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
 import com.example.soundonline.model.History;
-import com.example.soundonline.model.Sound;
 import com.example.soundonline.presentation.player.PlayerActivity;
 
-import java.text.ParseException; // For parsing String to Date
-import java.text.SimpleDateFormat;
-import java.util.Date; // For Date object
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-    private List<History> items;
-    private Context context;
 
-    public HistoryAdapter(Context context, List<History> items) {
+    private Context context;
+    private List<History> historyList;
+    private Set<Integer> selectedIds = new HashSet<>();
+    private boolean isSelectionMode = false; // New flag for selection mode
+
+    public HistoryAdapter(Context context, List<History> historyList) {
         this.context = context;
-        this.items = items;
+        this.historyList = historyList != null ? historyList : new ArrayList<>();
     }
 
-    public void updateData(List<History> newData) {
-        this.items = newData;
+    public void updateData(List<History> newHistoryList) {
+        this.historyList = newHistoryList != null ? newHistoryList : new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public List<History> getCurrentData() {
+        return historyList;
+    }
+
+    // Method to toggle selection mode
+    public void setSelectionMode(boolean selectionMode) {
+        if (this.isSelectionMode != selectionMode) {
+            this.isSelectionMode = selectionMode;
+            if (!isSelectionMode) { // Clear selections if exiting selection mode
+                selectedIds.clear();
+            }
+            notifyDataSetChanged(); // Rebind all views to show/hide checkboxes
+        }
+    }
+
+    public Set<Integer> getSelectedIds() {
+        return selectedIds;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listening_history, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_listening_history, parent, false); // Assuming item_history is your layout
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        History item = items.get(position);
+        History history = historyList.get(position);
 
-        // This null check for 'item' itself is usually not needed if getItemCount() is correct.
-        // If your list can genuinely contain null History objects, then keep it.
-        // Otherwise, it indicates an issue with how 'items' list is populated.
-        // For now, I'll keep it but recommend ensuring 'items' doesn't contain nulls.
-        if (item == null) {
-            holder.titleTextView.setText("Dữ liệu lịch sử không hợp lệ"); // More descriptive
-            holder.artistTextView.setText("");
-            holder.playCountTextView.setText("");
-            holder.durationTextView.setText("");
-            holder.trackImage.setImageResource(R.drawable.img); // Default image
-            holder.itemView.setOnClickListener(null);
-            holder.btnPlay.setOnClickListener(null);
-            holder.btnPlay.setVisibility(View.GONE); // Hide button if no data
-            return;
-        }
-
-        Sound song = item.getSound();
-
-        if (song != null) {
-            holder.titleTextView.setText(song.getTitle());
-            holder.artistTextView.setText(song.getArtistName());
-
-            // --- Handle playedAt (String to Date parsing) ---
-            SimpleDateFormat inputSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()); // Example: ISO 8601 format
-            SimpleDateFormat outputSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-            String formattedPlayedAt = "N/A";
-            if (item.getPlayedAt() != null && !item.getPlayedAt().isEmpty()) {
-                try {
-                    Date playedDate = inputSdf.parse(item.getPlayedAt());
-                    formattedPlayedAt = outputSdf.format(playedDate);
-                } catch (ParseException e) {
-                    Log.e("HistoryAdapter", "Error parsing playedAt date: " + item.getPlayedAt(), e);
-                    // Fallback to the original string or another default if parsing fails
-                    formattedPlayedAt = item.getPlayedAt() + " (Invalid Format)";
-                }
-            }
-            holder.playCountTextView.setText(formattedPlayedAt);
-            // --- End playedAt handling ---
-
-
-            holder.durationTextView.setText(String.valueOf(item.getPlayDuration()) + "s");
+        if (history.getSound() != null) {
+            holder.tvTitle.setText(history.getSound().getTitle());
+            holder.tvArtist.setText(history.getSound().getArtistName());
+            holder.tvDuration.setText("Duration: " + formatDuration(history.getSound().getDuration()));
 
             Glide.with(context)
-                    .load(song.getCoverImageUrl() != null ? song.getCoverImageUrl() : R.drawable.img)
-                    .error(R.drawable.img) // Error placeholder for Glide
-                    .into(holder.trackImage);
+                    .load(history.getSound().getCoverImageUrl())
+                    .placeholder(R.drawable.img) // default image
+                    .error(R.drawable.img) // error image
+                    .into(holder.imgCover);
 
-            holder.itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(context, PlayerActivity.class);
-                intent.putExtra("title", song.getTitle());
-                intent.putExtra("image", song.getCoverImageUrl());
-                intent.putExtra("audioUrl", song.getFileUrl());
-                intent.putExtra("artist", song.getArtistName());
-                intent.putExtra("uploader", song.getUploaderName());
-                context.startActivity(intent);
-            });
-
-            // Keep btnPlay listener if it has specific action or just duplicates itemView click
+            // Handle Play button click
             holder.btnPlay.setOnClickListener(v -> {
                 Intent intent = new Intent(context, PlayerActivity.class);
-                intent.putExtra("title", song.getTitle());
-                intent.putExtra("image", song.getCoverImageUrl());
-                intent.putExtra("audioUrl", song.getFileUrl());
-                intent.putExtra("artist", song.getArtistName());
-                intent.putExtra("uploader", song.getUploaderName());
+                intent.putExtra("playMode", "single");
+                intent.putExtra("audioUrl", history.getSound().getFileUrl());
                 context.startActivity(intent);
             });
-            holder.btnPlay.setVisibility(View.VISIBLE); // Ensure button is visible
-        } else {
-            // Handle the case where 'sound' is null
-            holder.titleTextView.setText("Bài hát không khả dụng");
-            holder.artistTextView.setText("Thông tin bài hát bị thiếu");
-            holder.playCountTextView.setText("Ngày phát: " + (item.getPlayedAt() != null ? item.getPlayedAt() : "N/A")); // Display raw string if sound is null
-            holder.durationTextView.setText("Thời lượng: N/A");
-            holder.trackImage.setImageResource(R.drawable.img); // Set default image
-            holder.itemView.setOnClickListener(null); // Disable click action if no sound
-            holder.btnPlay.setOnClickListener(null); // No click action
-            holder.btnPlay.setVisibility(View.GONE); // Hide the button
         }
+
+        holder.tvPlayedAt.setText("Played on: " + history.getPlayedAt());
+
+        // Checkbox visibility and state
+        if (isSelectionMode) {
+            holder.checkboxSelect.setVisibility(View.VISIBLE);
+            holder.checkboxSelect.setChecked(selectedIds.contains(history.getHistoryId()));
+        } else {
+            holder.checkboxSelect.setVisibility(View.GONE);
+            holder.checkboxSelect.setChecked(false); // Reset checked state
+        }
+
+        // Handle checkbox click
+        holder.checkboxSelect.setOnClickListener(v -> {
+            if (holder.checkboxSelect.isChecked()) {
+                selectedIds.add(history.getHistoryId());
+            } else {
+                selectedIds.remove(history.getHistoryId());
+            }
+        });
+
+        // Handle item click for selection (optional, can be long press or a dedicated button)
+        // For simplicity, let's make the whole item toggle the checkbox
+        holder.itemView.setOnClickListener(v -> {
+            if (isSelectionMode) {
+                holder.checkboxSelect.setChecked(!holder.checkboxSelect.isChecked());
+                if (holder.checkboxSelect.isChecked()) {
+                    selectedIds.add(history.getHistoryId());
+                } else {
+                    selectedIds.remove(history.getHistoryId());
+                }
+            } else {
+                // Regular play logic if not in selection mode
+                if (history.getSound() != null) {
+                    Intent intent = new Intent(context, PlayerActivity.class);
+                    intent.putExtra("playMode", "single");
+                    intent.putExtra("audioUrl", history.getSound().getFileUrl());
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return items != null ? items.size() : 0;
+        return historyList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView trackImage;
-        TextView titleTextView;
-        TextView artistTextView;
-        TextView playCountTextView;
-        TextView durationTextView;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgCover;
+        TextView tvTitle, tvArtist, tvPlayedAt, tvDuration;
         Button btnPlay;
+        CheckBox checkboxSelect; // Declare CheckBox
 
-        ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            trackImage = itemView.findViewById(R.id.imgCover);
-            titleTextView = itemView.findViewById(R.id.tvTitle);
-            artistTextView = itemView.findViewById(R.id.tvArtist);
-            playCountTextView = itemView.findViewById(R.id.tvPlayedAt);
-            durationTextView = itemView.findViewById(R.id.tvDuration);
+            imgCover = itemView.findViewById(R.id.imgCover);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvArtist = itemView.findViewById(R.id.tvArtist);
+            tvPlayedAt = itemView.findViewById(R.id.tvPlayedAt);
+            tvDuration = itemView.findViewById(R.id.tvDuration);
             btnPlay = itemView.findViewById(R.id.btnPlay);
+            checkboxSelect = itemView.findViewById(R.id.checkbox_select); // Initialize CheckBox
         }
+    }
+
+    private String formatDuration(int durationInSeconds) {
+        int minutes = durationInSeconds / 60;
+        int seconds = durationInSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
     }
 }
