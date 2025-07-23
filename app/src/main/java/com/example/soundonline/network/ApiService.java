@@ -170,6 +170,8 @@ public interface ApiService {
 
     @GET("sounds/{id}")
     Call<SoundResponse> getSound(@Path("id") int id);
+    @POST("Sounds")
+    Call<UploadSoundResponse> uploadSound(@Body UploadSoundRequest request);
 
     @POST("sounds/{id}/play")
     Call<PlaySoundResponse> playSound(@Path("id") int id);
