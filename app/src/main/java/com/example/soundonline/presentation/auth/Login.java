@@ -17,6 +17,7 @@ import com.example.soundonline.R;
 import com.example.soundonline.network.LoginRequest;
 import com.example.soundonline.network.LoginResponse;
 import com.example.soundonline.network.ApiService;
+import com.example.soundonline.presentation.library.AdminDashboardActivity;
 import com.example.soundonline.presentation.main.MainActivity;
 
 import java.io.IOException;
@@ -87,10 +88,21 @@ public class Login extends ComponentActivity {
                     LoginResponse loginResponse = response.body();
                     Log.d("Login", "Login successful: userId=" + loginResponse.getUserId() + ", token=" + loginResponse.getToken());
                     saveLoginInfo(loginResponse);
-                    Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Login.this, MainActivity.class);
+                    // Kiểm tra vai trò Admin
+                    boolean isAdmin = loginResponse.getRoles() != null && loginResponse.getRoles().contains("Admin");
+                    Intent intent;
+                    if (isAdmin) {
+                        Log.d("Login", "User is Admin, redirecting to AdminDashboardActivity");
+                        intent = new Intent(Login.this, AdminDashboardActivity.class);
+                    } else {
+                        Log.d("Login", "User is not Admin, redirecting to MainActivity");
+                        intent = new Intent(Login.this, MainActivity.class);
+                    }
+                    intent.putExtra("user_id", loginResponse.getUserId());
                     startActivity(intent);
+                    Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     finish();
+
                 } else {
                     String errorBody = "";
                     try {

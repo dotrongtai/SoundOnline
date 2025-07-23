@@ -38,7 +38,21 @@ public interface ApiService {
 
     @POST("auth/register")
     Call<LoginResponse> register(@Body RegisterRequest registerRequest);
+    // New Admin endpoints
+    @GET("admin/users")
+    Call<List<User>> getAllUsers();
 
+    @POST("admin/users")
+    Call<User> createUser(@Body User user);
+
+    @GET("admin/users/{id}")
+    Call<User> getUserById(@Path("id") int userId);
+
+    @PUT("admin/users/{id}")
+    Call<User> updateUserById(@Path("id") int userId, @Body User user);
+
+    @DELETE("admin/users/{id}")
+    Call<Void> deleteUser(@Path("id") int userId);
     @GET("Users/{id}") // Sửa thành uppercase /Users để khớp với Postman
     Call<User> getUser(@Path("id") int userId);
 

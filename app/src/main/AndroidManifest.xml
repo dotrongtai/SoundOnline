@@ -58,6 +58,15 @@
             android:name=".presentation.library.ProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.library.AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.CreateEditUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.library.UserManagementActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.auth.Login"
             android:exported="false" />
         <activity
