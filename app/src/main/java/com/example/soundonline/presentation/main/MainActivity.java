@@ -32,6 +32,8 @@ import com.example.soundonline.presentation.library.CategoryActivity;
 import com.example.soundonline.presentation.library.LibraryActivity;
 import com.example.soundonline.presentation.library.ProfileActivity;
 import com.example.soundonline.presentation.player.UploadSoundActivity;
+import com.example.soundonline.presentation.playlist.playlistActivity;
+import com.example.soundonline.presentation.playlist.searchActivity;
 
 import java.util.List;
 
@@ -58,6 +60,8 @@ public class MainActivity extends ComponentActivity {
     private TextView tvPlaylistTitle, tvLikedTitle, miniTitle;
     private LinearLayout miniPlayer;
     private ImageButton btnMiniPlay;
+    private Button btnSearch, btnPlaylist;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +83,16 @@ public class MainActivity extends ComponentActivity {
         miniPlayer = findViewById(R.id.miniPlayer);
         miniTitle = findViewById(R.id.miniPlayerTitle);
         btnMiniPlay = findViewById(R.id.miniPlayerPlayPause);
+        btnPlaylist = findViewById(R.id.btnPlaylist); // Nút để chuyển đến playlist
+        btnPlaylist.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, playlistActivity.class);
+            startActivity(intent);
+        });
+        btnSearch = findViewById(R.id.btnSearch); // Nút để chuyển đến tìm kiếm
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, searchActivity.class);
+            startActivity(intent);
+        });
 
         // Cài đặt layout manager
         rvTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
