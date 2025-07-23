@@ -37,7 +37,7 @@ public class Login extends ComponentActivity {
     ApiService apiService;
 
     private EditText edtEmail, edtPassword;
-    private Button btnLogin,btnHome;
+    private Button btnLogin;
     private TextView tvRegister;
 
     @Override
@@ -49,19 +49,12 @@ public class Login extends ComponentActivity {
         edtPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
         tvRegister = findViewById(R.id.tv_register);
-        btnHome = findViewById(R.id.btn_home);
         tvRegister.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
         });
-        btnHome.setOnClickListener(v->{
-            Intent intent = new Intent(Login.this,MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
         btnLogin.setOnClickListener(view -> performLogin());
     }
-
 
     private void performLogin() {
         String email = edtEmail.getText().toString().trim();

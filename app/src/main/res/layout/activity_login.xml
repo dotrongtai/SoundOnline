@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp"/>
 
-    <!-- Email Input -->
+
     <EditText
         android:id="@+id/et_email"
         android:layout_width="0dp"
@@ -77,19 +77,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
-
-    <!-- Home Button -->
-    <Button
-        android:id="@+id/btn_home"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Trang Chủ"
-        android:backgroundTint="#6200EA"
-        android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/tv_register"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

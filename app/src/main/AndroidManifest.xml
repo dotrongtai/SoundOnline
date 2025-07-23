@@ -77,12 +77,8 @@
             android:name=".presentation.player.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.player.UploadSoundActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
