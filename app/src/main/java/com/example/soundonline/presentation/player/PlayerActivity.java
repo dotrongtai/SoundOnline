@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
 import com.example.soundonline.manager.MediaPlayerManager;
+import com.example.soundonline.model.History;
+import com.example.soundonline.network.History.AddHistoryRequest;
 import com.example.soundonline.network.Like.LikeToggleResponse;
 import com.example.soundonline.model.Liked;
 import com.example.soundonline.model.Sound;
@@ -127,6 +129,33 @@ public class PlayerActivity extends AppCompatActivity {
                 if (MediaPlayerManager.getMediaPlayer() == null || !MediaPlayerManager.isMediaPrepared()) {
                     Log.d("PlayerActivity", "MediaPlayer null or not prepared, restarting playback");
                     MediaPlayerManager.play(this, audioUrl, title, artist, null, imageUrl, songId);
+
+                    //gọi API lưu lịch sử nghe:
+                    int userId = getSharedPreferences("auth", MODE_PRIVATE).getInt("user_id", -1);
+                    if (userId != -1 && songId != null) {
+                        try {
+                            int soundIdInt = Integer.parseInt(songId);
+                            AddHistoryRequest historyRequest = new AddHistoryRequest(soundIdInt, 0, false);
+                            apiService.addHistory(historyRequest).enqueue(new Callback<History>() {
+                                @Override
+                                public void onResponse(Call<History> call, Response<History> response) {
+                                    if (response.isSuccessful()) {
+                                        Log.d("PlayerActivity", "Lưu lịch sử nghe thành công");
+                                    } else {
+                                        Log.e("PlayerActivity", "Lỗi khi lưu lịch sử nghe: " + response.code());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<History> call, Throwable t) {
+                                    Log.e("PlayerActivity", "Lỗi khi gọi API addHistory: " + t.getMessage());
+                                }
+                            });
+                        } catch (NumberFormatException e) {
+                            Log.e("PlayerActivity", "Không thể parse songId: " + songId);
+                        }
+                    }
+
                 } else {
                     MediaPlayerManager.resume();
                     Log.d("PlayerActivity", "Resumed playback");

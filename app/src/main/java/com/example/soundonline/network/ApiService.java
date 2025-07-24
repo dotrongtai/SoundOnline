@@ -136,7 +136,9 @@ public interface ApiService {
 
     // History Endpoints
     @POST("history")
-    Call<AddHistoryResponse> addHistory(@Body AddHistoryRequest request);
+    Call<History> addHistory(@Body AddHistoryRequest request);
+
+
 
     // Home Endpoint
     @GET("home")
@@ -201,10 +203,16 @@ public interface ApiService {
     Call<FollowersResponse> getFollowers(@Path("id") int id);
 
     @GET("users/{id}/following")
-    Call<FollowingResponse> getFollowing(@Path("id") int id);
+    Call<List<Following>> getFollowing(@Path("id") int id);
 
     @GET("users/{id}/history")
     Call<List<History>> getUserHistory(@Path("id") int id);
+
+    @POST("api/users/{id}/history/delete-multiple")
+    Call<Void> deleteHistories(
+            @Path("id") int userId,
+            @Body List<Integer> historyIds
+    );
     @PUT("admin/{id}")
     Call<Void> updateSound(@Path("id") int id, @Body UpdateSoundRequest request);
     @POST("/api/PlaylistTrack/add-sound")

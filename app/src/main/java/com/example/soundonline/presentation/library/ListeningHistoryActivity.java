@@ -4,23 +4,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log; // Import Log
+import android.view.View; // Import View
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soundonline.Adapter.HistoryAdapter;
 import com.example.soundonline.R;
 import com.example.soundonline.model.History;
-import com.example.soundonline.network.User.UserHistoryResponse;
 import com.example.soundonline.network.ApiService;
 import com.example.soundonline.presentation.main.MainActivity;
+import com.example.soundonline.presentation.player.PlayerActivity;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -38,6 +47,10 @@ public class ListeningHistoryActivity extends ComponentActivity {
     private HistoryAdapter adapter;
     private int userId;
 
+    private boolean isSelectionMode = false; // Keep track of selection mode in activity as well
+
+    private ImageButton btnDeleteHistory; // Reference to the delete button
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +59,9 @@ public class ListeningHistoryActivity extends ComponentActivity {
         // Setup toolbar
         ImageButton backButton = findViewById(R.id.btnBack);
         TextView titleView = findViewById(R.id.tvTitle);
+        ImageButton btnPlayRandom = findViewById(R.id.btnPlayRandom);
+        ImageButton btnPlayAll = findViewById(R.id.btnPlayAll);
+        btnDeleteHistory = findViewById(R.id.btnDeleteHistory); // Initialize the button
         titleView.setText("Listening History");
 
         // Setup RecyclerView
@@ -66,8 +82,85 @@ public class ListeningHistoryActivity extends ComponentActivity {
         // Fetch data
         fetchUserHistory();
 
-        // Handle back
-        backButton.setOnClickListener(v -> onBackPressed());
+        // Handle back button
+        backButton.setOnClickListener(v -> {
+            if (isSelectionMode) {
+                exitSelectionMode(); // Exit selection mode if active
+            } else {
+                onBackPressed(); // Go back as usual
+            }
+        });
+
+        // Play Random
+        btnPlayRandom.setOnClickListener(v -> {
+            List<History> historyList = adapter.getCurrentData();
+            if (historyList == null || historyList.isEmpty()) {
+                Toast.makeText(this, "Danh sách trống!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            ArrayList<String> audioUrls = new ArrayList<>();
+            for (History h : historyList) {
+                if (h.getSound() != null && h.getSound().getFileUrl() != null) {
+                    audioUrls.add(h.getSound().getFileUrl());
+                }
+            }
+
+            // Shuffle playlist
+            Collections.shuffle(audioUrls);
+
+            Intent intent = new Intent(this, PlayerActivity.class);
+            intent.putExtra("playMode", "playlist");
+            intent.putStringArrayListExtra("playlist", audioUrls);
+            startActivity(intent);
+        });
+
+        // Delete history button logic
+        btnDeleteHistory.setOnClickListener(v -> {
+            if (isSelectionMode) {
+                // If in selection mode, prompt for deletion
+                Set<Integer> selectedIds = adapter.getSelectedIds();
+                if (selectedIds.isEmpty()) {
+                    Toast.makeText(this, "Chọn bài để xóa", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Xác nhận")
+                        .setMessage("Bạn có chắc muốn xóa các bài đã chọn?")
+                        .setPositiveButton("Xóa", (dialog, which) -> {
+                            deleteHistories(selectedIds);
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+            } else {
+                // If not in selection mode, enter selection mode
+                enterSelectionMode();
+            }
+        });
+
+
+        // Play All
+        btnPlayAll.setOnClickListener(v -> {
+            List<History> historyList = adapter.getCurrentData();
+            if (historyList == null || historyList.isEmpty()) {
+                Toast.makeText(this, "Danh sách trống!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Gửi danh sách sang PlayerActivity
+            Intent intent = new Intent(this, PlayerActivity.class);
+            intent.putExtra("playMode", "playlist");
+
+            ArrayList<String> audioUrls = new ArrayList<>();
+            for (History h : historyList) {
+                if (h.getSound() != null) {
+                    audioUrls.add(h.getSound().getFileUrl());
+                }
+            }
+            intent.putStringArrayListExtra("playlist", audioUrls);
+            startActivity(intent);
+        });
 
         // Bottom navigation
         setupBottomNavigation();
@@ -99,6 +192,69 @@ public class ListeningHistoryActivity extends ComponentActivity {
                 Toast.makeText(ListeningHistoryActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Function to delete histories via API
+    private void deleteHistories(Set<Integer> ids) {
+        apiService.deleteHistories(getUserIdFromPreferences(), new ArrayList<>(ids)).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ListeningHistoryActivity.this, "Đã xóa thành công", Toast.LENGTH_SHORT).show();
+                    exitSelectionMode(); // Exit selection mode after deletion
+                    fetchUserHistory(); // Reload data
+                } else {
+                    // Log the error details
+                    Log.e("DeleteHistory", "Xóa dữ liệu thất bại. Mã lỗi: " + response.code());
+                    try {
+                        // Attempt to read the error body for more details from the server
+                        if (response.errorBody() != null) {
+                            Log.e("DeleteHistory", "Thông báo lỗi từ server: " + response.errorBody().string());
+                        }
+                    } catch (IOException e) {
+                        Log.e("DeleteHistory", "Lỗi đọc errorBody: " + e.getMessage());
+                    }
+                    Toast.makeText(ListeningHistoryActivity.this, "Lỗi xóa dữ liệu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ListeningHistoryActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Method to enter selection mode
+    private void enterSelectionMode() {
+        isSelectionMode = true;
+        adapter.setSelectionMode(true);
+        // You might want to change the UI of the delete button here, e.g., to "Done" or "Cancel"
+        // For example, change its icon or text
+        btnDeleteHistory.setImageResource(R.drawable.ic_delete); // Example: change to a checkmark icon
+        // Or hide other buttons if they conflict with selection mode
+        findViewById(R.id.btnPlayRandom).setVisibility(View.GONE);
+        findViewById(R.id.btnPlayAll).setVisibility(View.GONE);
+    }
+
+    // Method to exit selection mode
+    private void exitSelectionMode() {
+        isSelectionMode = false;
+        adapter.setSelectionMode(false);
+        // Reset the delete button UI
+        btnDeleteHistory.setImageResource(R.drawable.ic_delete); // Example: change back to delete icon
+        // Show other buttons again
+        findViewById(R.id.btnPlayRandom).setVisibility(View.VISIBLE);
+        findViewById(R.id.btnPlayAll).setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isSelectionMode) {
+            exitSelectionMode(); // Exit selection mode if active
+        } else {
+            super.onBackPressed(); // Perform default back action
+        }
     }
 
 

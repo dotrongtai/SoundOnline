@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SoundOnline"
         tools:targetApi="31">
-
+        <activity
+            android:name=".presentation.library.FollowingActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.library.YourUploadActivity"
             android:exported="false" />
@@ -72,9 +74,11 @@
         <activity
             android:name=".presentation.auth.Register"
             android:exported="false" />
-
         <activity
             android:name=".presentation.player.PlayerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.player.PlayerForHistory"
             android:exported="false" />
         <activity
             android:name=".presentation.player.UploadSoundActivity"
@@ -106,6 +110,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
