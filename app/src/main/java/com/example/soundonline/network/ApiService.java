@@ -101,7 +101,7 @@ public interface ApiService {
     Call<List<Album>> getAlbums();
 
     @GET("Albums/{albumId}")
-    Call<AlbumResponse> getAlbum(@Path("albumId") int albumId);
+    Call<Album> getAlbum(@Path("albumId") int albumId);
 
     @PUT("Albums/{albumId}")
     Call<UpdateAlbumResponse> updateAlbum(@Path("albumId") int albumId, @Body UpdateAlbumRequest request);

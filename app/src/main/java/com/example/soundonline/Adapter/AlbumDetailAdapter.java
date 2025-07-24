@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.soundonline.R;
 import com.example.soundonline.model.Sound;
-import com.example.soundonline.presentation.player.PlayerForHistory;
+import com.example.soundonline.presentation.player.PlayerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
 
         // Handle click to play song
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, PlayerForHistory.class);
+            Intent intent = new Intent(context, PlayerActivity.class);
             intent.putExtra("title", sound.getTitle());
             intent.putExtra("image", sound.getCoverImageUrl());
             intent.putExtra("audioUrl", sound.getFileUrl());
